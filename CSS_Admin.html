@@ -1,0 +1,107 @@
+<style>
+/* ============================================================
+   CSS_Admin.html — Admin panel styles
+============================================================ */
+
+/* ── Admin access denied ────────────────────────────────── */
+.admin-denied {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: var(--sp-12); text-align: center; gap: var(--sp-4);
+  flex: 1;
+}
+.admin-denied-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #ede9fe; color: var(--color-accent-admin);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 8px #f5f3ff;
+}
+.admin-denied-icon svg { width: 30px; height: 30px; }
+.admin-denied h2 { font-size: 1.25rem; color: var(--color-text); }
+.admin-denied p  { font-size: 0.9375rem; color: var(--color-text-muted); max-width: 360px; }
+
+/* ── Admin content area ─────────────────────────────────── */
+.admin-content { padding: var(--sp-8); max-width: 860px; }
+
+/* ── Admin section card ─────────────────────────────────── */
+.admin-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--sp-6);
+  overflow: hidden;
+}
+.admin-section-header {
+  padding: var(--sp-4) var(--sp-6);
+  background: #f8f9fb;
+  border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; gap: var(--sp-3);
+}
+.admin-section-header h3 {
+  font-size: 0.875rem; font-weight: 700;
+  color: var(--color-primary); margin: 0;
+}
+.admin-section-header p {
+  font-size: 0.8125rem; color: var(--color-text-muted); margin: 0;
+}
+.admin-section-icon {
+  width: 32px; height: 32px; border-radius: var(--r-md);
+  background: var(--color-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.admin-section-icon svg { width: 16px; height: 16px; }
+.admin-section-body { padding: var(--sp-5) var(--sp-6); }
+
+/* ── Admin field groups ─────────────────────────────────── */
+.admin-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--sp-4) var(--sp-5); }
+.admin-grid--1 { grid-template-columns: 1fr; }
+.admin-field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.admin-field--full { grid-column: 1 / -1; }
+.admin-label {
+  font-size: 0.8125rem; font-weight: 600; color: var(--color-text);
+}
+.admin-description {
+  font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 2px;
+}
+
+/* ── Save bar ────────────────────────────────────────────── */
+.admin-save-bar {
+  position: sticky; bottom: 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: var(--sp-4) var(--sp-8);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sp-4);
+  box-shadow: 0 -4px 14px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.admin-save-status {
+  font-size: 0.875rem; color: var(--color-text-muted);
+  display: flex; align-items: center; gap: var(--sp-2);
+}
+.admin-save-status.saved  { color: #16a34a; }
+.admin-save-status.saving { color: var(--color-primary-light); }
+.admin-save-status.error  { color: var(--color-accent-esy); }
+
+.btn-admin-save {
+  background: var(--color-accent-admin); color: #fff;
+  padding: var(--sp-3) var(--sp-8);
+  border-radius: var(--r-md); border: none;
+  font-size: 0.9375rem; font-weight: 600;
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  transition: background var(--transition), box-shadow var(--transition);
+  box-shadow: 0 2px 8px rgba(109,40,217,0.22);
+  cursor: pointer;
+}
+.btn-admin-save:hover { background: #5b21b6; }
+.btn-admin-save:disabled { opacity: 0.55; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .admin-content { padding: var(--sp-5); }
+  .admin-section-body { padding: var(--sp-4); }
+  .admin-grid { grid-template-columns: 1fr; }
+  .admin-save-bar { padding: var(--sp-4); flex-direction: column; align-items: stretch; }
+}
+</style>
