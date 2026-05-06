@@ -16,9 +16,6 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     SIDEBAR
-════════════════════════════════════════════ -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-logo">
@@ -69,7 +66,6 @@
       <span class="nav-badge">ESY</span>
     </button>
 
-    <!-- Admin nav item — only rendered if user is admin -->
     <?if (isAdmin) {?>
     <div class="nav-section-label">Administration</div>
     <button class="nav-item" data-tab="admin" onclick="AppNav.switchTab('admin')">
@@ -90,9 +86,6 @@
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="AppNav.closeMobileSidebar()"></div>
 
-<!-- ═══════════════════════════════════════════
-     MAIN CONTENT
-════════════════════════════════════════════ -->
 <main class="main-content" id="mainContent">
 
   <header class="mobile-header">
@@ -103,9 +96,6 @@
   </header>
 
 
-  <!-- ═══════════════════════════════════════
-       HOME TAB — PROGRAM INFORMATION
-  ════════════════════════════════════════ -->
   <section class="tab-panel active" id="tab-home" role="tabpanel">
 
     <div class="page-header">
@@ -130,7 +120,6 @@
 
     <div class="content-area">
 
-      <!-- Pay notice -->
       <div class="pay-note">
         <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
@@ -142,7 +131,6 @@
         </span>
       </div>
 
-      <!-- Shared schedule block -->
       <div class="section-heading">Comprehensive Sites, Chap/IDEA &amp; MERIT</div>
       <div class="shared-schedule-card">
         <div class="shared-schedule-header">
@@ -167,11 +155,9 @@
         </div>
       </div>
 
-      <!-- Site-specific cards -->
       <div class="section-heading">Site-Specific Schedules</div>
       <div class="site-cards">
 
-        <!-- ELITE — ESY only -->
         <div class="site-card">
           <div class="site-card-header esy-hdr">
             <div class="site-card-icon">
@@ -194,7 +180,6 @@
           </div>
         </div>
 
-        <!-- Helix — Both programs -->
         <div class="site-card">
           <div class="site-card-header both-hdr">
             <div class="site-card-icon">
@@ -217,7 +202,6 @@
           </div>
         </div>
 
-        <!-- Steele Canyon — Both programs -->
         <div class="site-card">
           <div class="site-card-header both-hdr">
             <div class="site-card-icon">
@@ -239,10 +223,7 @@
           </div>
         </div>
 
-      </div><!-- /site-cards -->
-
-      <!-- Contact -->
-      <div class="section-heading">Contact &amp; Additional Information</div>
+      </div><div class="section-heading">Contact &amp; Additional Information</div>
       <div class="contact-card">
         <div class="contact-card-header"><h3>Questions? Contact the Special Education Department</h3></div>
         <div class="contact-card-body">
@@ -262,13 +243,9 @@
         </div>
       </div>
 
-    </div><!-- /content-area -->
-  </section>
+    </div></section>
 
 
-  <!-- ═══════════════════════════════════════
-       CERTIFICATED ESY APPLICATION
-  ════════════════════════════════════════ -->
   <section class="tab-panel" id="tab-cert-esy" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -351,15 +328,17 @@
           <h3 class="form-section-title">Previous ESY Experience</h3>
           <div class="form-grid form-grid--2">
             <div class="field-group">
-              <label class="field-label">Did you teach ESY in 24/25? <span class="required">*</span></label>
-              <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="Taught ESY 24/25" value="Yes" required><span>Yes</span></label>
-                <label class="radio-option"><input type="radio" name="Taught ESY 24/25" value="No"><span>No</span></label>
+              <label class="field-label">Which of the previous two years did you teach ESY? <span class="required">*</span></label>
+              <p class="session-check-hint">Select all that apply.</p>
+              <div class="session-check-group" id="ce-prev-years-group">
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="23/24"><span>23/24</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="24/25"><span>24/25</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="None"><span>None</span></label>
               </div>
             </div>
-            <div class="field-group" id="ce-prev-location-group" data-conditional style="display:none;">
-              <label class="field-label" for="ce-prev-loc">24/25 ESY Location</label>
-              <input class="field-input" type="text" id="ce-prev-loc" name="ESY 24/25 Location" placeholder="Site name">
+            <div class="field-group" id="ce-prev-location-group" style="display:none;">
+              <label class="field-label" for="ce-prev-loc">Previous ESY Location(s)</label>
+              <input class="field-input" type="text" id="ce-prev-loc" name="Previous ESY Location" placeholder="Site name(s)">
             </div>
           </div>
         </div>
@@ -369,8 +348,8 @@
           <label class="field-label">Which sessions are you available for? <span class="required">*</span></label>
           <p class="session-check-hint">Select all that apply.</p>
           <div class="session-check-group">
-            <label class="session-check-option"><input type="checkbox" value="Session 1"><span>Session 1</span></label>
-            <label class="session-check-option"><input type="checkbox" value="Session 2"><span>Session 2</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 1" name="Session Availability"><span>Session 1</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 2" name="Session Availability"><span>Session 2</span></label>
           </div>
         </div>
 
@@ -415,9 +394,6 @@
   </section>
 
 
-  <!-- ═══════════════════════════════════════
-       CERTIFICATED SUMMER SCHOOL APPLICATION
-  ════════════════════════════════════════ -->
   <section class="tab-panel" id="tab-cert-ss" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -496,15 +472,17 @@
           <h3 class="form-section-title">Previous Summer School Experience</h3>
           <div class="form-grid form-grid--2">
             <div class="field-group">
-              <label class="field-label">Did you teach Summer School Credit Recovery in 24/25? <span class="required">*</span></label>
-              <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="Taught Summer School 24/25" value="Yes" required><span>Yes</span></label>
-                <label class="radio-option"><input type="radio" name="Taught Summer School 24/25" value="No"><span>No</span></label>
+              <label class="field-label">Which of the previous two years did you teach Summer School? <span class="required">*</span></label>
+              <p class="session-check-hint">Select all that apply.</p>
+              <div class="session-check-group" id="cs-prev-years-group">
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="23/24"><span>23/24</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="24/25"><span>24/25</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="None"><span>None</span></label>
               </div>
             </div>
-            <div class="field-group" id="cs-prev-location-group" data-conditional style="display:none;">
-              <label class="field-label" for="cs-prev-loc">24/25 Summer School Location</label>
-              <input class="field-input" type="text" id="cs-prev-loc" name="Summer School 24/25 Location" placeholder="Site name">
+            <div class="field-group" id="cs-prev-location-group" style="display:none;">
+              <label class="field-label" for="cs-prev-loc">Previous Summer School Location(s)</label>
+              <input class="field-input" type="text" id="cs-prev-loc" name="Previous Summer School Location" placeholder="Site name(s)">
             </div>
           </div>
         </div>
@@ -514,8 +492,8 @@
           <label class="field-label">Which sessions are you available for? <span class="required">*</span></label>
           <p class="session-check-hint">Select all that apply.</p>
           <div class="session-check-group">
-            <label class="session-check-option"><input type="checkbox" value="Session 1"><span>Session 1</span></label>
-            <label class="session-check-option"><input type="checkbox" value="Session 2"><span>Session 2</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 1" name="Session Availability"><span>Session 1</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 2" name="Session Availability"><span>Session 2</span></label>
           </div>
         </div>
 
@@ -560,9 +538,6 @@
   </section>
 
 
-  <!-- ═══════════════════════════════════════
-       CLASSIFIED ESY APPLICATION
-  ════════════════════════════════════════ -->
   <section class="tab-panel" id="tab-class-esy" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -677,9 +652,6 @@
   </section>
 
 
-  <!-- ═══════════════════════════════════════
-       ADMIN PANEL (admin users only)
-  ════════════════════════════════════════ -->
   <?if (isAdmin) {?>
   <section class="tab-panel" id="tab-admin" role="tabpanel">
     <div class="page-header">
@@ -693,7 +665,6 @@
       </div>
     </div>
 
-    <!-- Access denied state (shown if server-side check fails) -->
     <div class="admin-denied" id="adminDenied" style="display:none;">
       <div class="admin-denied-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -704,10 +675,8 @@
       <p>Your account does not have permission to access the admin panel. Please contact your system administrator to be added to the authorized list.</p>
     </div>
 
-    <!-- Admin panel content -->
     <div class="admin-content" id="adminPanelContent">
 
-      <!-- Home Screen Text -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon">
@@ -734,7 +703,6 @@
         </div>
       </div>
 
-      <!-- Shared Schedule -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon">
@@ -763,7 +731,6 @@
         </div>
       </div>
 
-      <!-- ELITE -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon" style="background:var(--color-accent-esy);">
@@ -793,7 +760,6 @@
         </div>
       </div>
 
-      <!-- Helix -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon" style="background:var(--color-primary-light);">
@@ -823,7 +789,6 @@
         </div>
       </div>
 
-      <!-- Steele Canyon -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon" style="background:var(--color-primary-light);">
@@ -849,7 +814,6 @@
         </div>
       </div>
 
-      <!-- Contact Info -->
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon">
@@ -880,10 +844,7 @@
         </div>
       </div>
 
-    </div><!-- /adminPanelContent -->
-
-    <!-- Sticky save bar -->
-    <div class="admin-save-bar">
+    </div><div class="admin-save-bar">
       <span class="admin-save-status" id="adminSaveStatus"></span>
       <button class="btn-admin-save" id="adminSaveBtn" onclick="AppAdmin.save()">
         <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
@@ -896,11 +857,7 @@
   </section>
   <?}?>
 
-</main><!-- /main-content -->
-
-
-<!-- Success Modal -->
-<div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+</main><div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
   <div class="modal">
     <div class="modal-icon modal-icon--success">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -913,7 +870,6 @@
   </div>
 </div>
 
-<!-- Error Modal -->
 <div class="modal-backdrop" id="errorModal" role="dialog" aria-modal="true" aria-labelledby="errorTitle">
   <div class="modal">
     <div class="modal-icon modal-icon--error">
