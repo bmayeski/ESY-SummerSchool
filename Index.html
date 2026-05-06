@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESY &amp; Summer School Staff Applications — GUHSD 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <?!= include('CSS_Reset');  ?>
+  <?!= include('CSS_Layout'); ?>
+  <?!= include('CSS_Nav');    ?>
+  <?!= include('CSS_Forms');  ?>
+  <?!= include('CSS_Modals'); ?>
+  <?!= include('CSS_Admin');  ?>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <div class="sidebar-logo-text">
+        <span class="district">Grossmont Union HSD</span>
+        <span class="app-name">Summer Programs</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-section-label">Overview</div>
+    <button class="nav-item active" data-tab="home" onclick="AppNav.switchTab('home')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h3a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h3a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+      </svg>
+      <span>Program Information</span>
+    </button>
+
+    <div class="nav-section-label">Applications</div>
+    <button class="nav-item" data-tab="cert-esy" onclick="AppNav.switchTab('cert-esy')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+      </svg>
+      <span>Certificated ESY</span>
+      <span class="nav-badge">ESY</span>
+    </button>
+    <button class="nav-item" data-tab="cert-ss" onclick="AppNav.switchTab('cert-ss')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+      </svg>
+      <span>Certificated Summer School</span>
+      <span class="nav-badge">SS</span>
+    </button>
+    <button class="nav-item" data-tab="class-esy" onclick="AppNav.switchTab('class-esy')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+      </svg>
+      <span>Classified ESY</span>
+      <span class="nav-badge">ESY</span>
+    </button>
+
+    <!-- Admin nav item — only rendered if user is admin -->
+    <?if (isAdmin) {?>
+    <div class="nav-section-label">Administration</div>
+    <button class="nav-item" data-tab="admin" onclick="AppNav.switchTab('admin')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+      </svg>
+      <span>Admin Panel</span>
+      <span class="nav-badge">Admin</span>
+    </button>
+    <?}?>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-year">2026 Programs</div>
+    <div class="sidebar-footer-name">Grossmont Union High School District</div>
+  </div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="AppNav.closeMobileSidebar()"></div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<main class="main-content" id="mainContent">
+
+  <header class="mobile-header">
+    <button class="hamburger-btn" aria-label="Open navigation" onclick="AppNav.openMobileSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="mobile-header-title" id="mobileTitle">Program Information</span>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════
+       HOME TAB — PROGRAM INFORMATION
+  ════════════════════════════════════════ -->
+  <section class="tab-panel active" id="tab-home" role="tabpanel">
+
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <h1 class="page-title">Program Information</h1>
+          <p class="page-subtitle" id="announcementMsg">Loading program information…</p>
+        </div>
+        <div class="deadline-chip">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+          </svg>
+          Deadline: <strong id="deadlineDate">—</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading program information…</p>
+    </div>
+
+    <div class="content-area">
+
+      <!-- Pay notice -->
+      <div class="pay-note">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+        </svg>
+        <span>
+          Submitting this application is a declaration of interest only — <strong>it is not a confirmed assignment</strong>.
+          All contracts are conditional on enrollment. Once you receive an offer you have <strong>5 days</strong> to accept or reject it.
+          Pay for work completed in June is issued at the end of July; pay for July work is issued at the end of August.
+        </span>
+      </div>
+
+      <!-- Shared schedule block -->
+      <div class="section-heading">Comprehensive Sites, Chap/IDEA &amp; MERIT</div>
+      <div class="shared-schedule-card">
+        <div class="shared-schedule-header">
+          <div>
+            <h3>Shared Program Schedule</h3>
+            <p>The following dates and session times apply to all Comprehensive, Chap/IDEA, and MERIT sites for both ESY and Summer School Credit Recovery.</p>
+          </div>
+        </div>
+        <div class="shared-schedule-body">
+          <div class="schedule-cell">
+            <span class="schedule-cell-label">Program Dates</span>
+            <span class="schedule-cell-value" id="sharedDates">6/8/26 – 6/26/26 (no school 6/19)</span>
+          </div>
+          <div class="schedule-cell">
+            <span class="schedule-cell-label">Session I Hours</span>
+            <span class="schedule-cell-value" id="sharedSessionI">8:00 am – 11:00 am</span>
+          </div>
+          <div class="schedule-cell">
+            <span class="schedule-cell-label">Session II Hours</span>
+            <span class="schedule-cell-value" id="sharedSessionII">11:45 am – 2:45 pm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Site-specific cards -->
+      <div class="section-heading">Site-Specific Schedules</div>
+      <div class="site-cards">
+
+        <!-- ELITE — ESY only -->
+        <div class="site-card">
+          <div class="site-card-header esy-hdr">
+            <div class="site-card-icon">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <div>
+              <div class="site-card-label">ESY Only</div>
+              <div class="site-card-name">ELITE Academy</div>
+            </div>
+          </div>
+          <div class="site-card-body">
+            <div class="info-row"><span class="info-label">Session I Dates</span><span class="info-value" id="eliteSessIDates">6/8/26 – 6/26/26</span></div>
+            <div class="info-row"><span class="info-label">Session II Dates</span><span class="info-value" id="eliteSessIIDates">6/29/26 – 7/17/26</span></div>
+            <div class="info-row"><span class="info-label">Hours</span><span class="info-value" id="eliteHours">9:30 am – 1:30 pm</span></div>
+            <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="eliteNoSchool">6/19 or 7/3</span></div>
+          </div>
+          <div class="site-card-actions">
+            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY Application</button>
+            <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('class-esy')">Classified ESY Application</button>
+          </div>
+        </div>
+
+        <!-- Helix — Both programs -->
+        <div class="site-card">
+          <div class="site-card-header both-hdr">
+            <div class="site-card-icon">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
+            </div>
+            <div>
+              <div class="site-card-label">ESY &amp; Summer School</div>
+              <div class="site-card-name">Helix Charter</div>
+            </div>
+          </div>
+          <div class="site-card-body">
+            <div class="info-row"><span class="info-label">Dates</span><span class="info-value" id="helixDates">6/10/26 – 7/1/26</span></div>
+            <div class="info-row"><span class="info-label">Session I Hours</span><span class="info-value" id="helixSessIHours">8:00 – 11:15 am</span></div>
+            <div class="info-row"><span class="info-label">Session II Hours</span><span class="info-value" id="helixSessIIHours">11:45 am – 3:00 pm</span></div>
+            <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="helixNoSchool">6/19</span></div>
+          </div>
+          <div class="site-card-actions">
+            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY</button>
+            <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('cert-ss')">Certificated Summer School</button>
+          </div>
+        </div>
+
+        <!-- Steele Canyon — Both programs -->
+        <div class="site-card">
+          <div class="site-card-header both-hdr">
+            <div class="site-card-icon">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
+            </div>
+            <div>
+              <div class="site-card-label">ESY &amp; Summer School</div>
+              <div class="site-card-name">Steele Canyon</div>
+            </div>
+          </div>
+          <div class="site-card-body">
+            <div class="info-row"><span class="info-label">Dates</span><span class="info-value" id="steeleDates">6/8/26 – 6/26/26</span></div>
+            <div class="info-row"><span class="info-label">Session I Hours</span><span class="info-value" id="steeleSessIHours">8:00 am – 12:45 pm</span></div>
+            <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="steeleNoSchool">6/19</span></div>
+          </div>
+          <div class="site-card-actions">
+            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY</button>
+            <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('cert-ss')">Certificated Summer School</button>
+          </div>
+        </div>
+
+      </div><!-- /site-cards -->
+
+      <!-- Contact -->
+      <div class="section-heading">Contact &amp; Additional Information</div>
+      <div class="contact-card">
+        <div class="contact-card-header"><h3>Questions? Contact the Special Education Department</h3></div>
+        <div class="contact-card-body">
+          <div class="contact-item">
+            <div class="contact-item-label">Contact</div>
+            <div class="contact-item-value" id="contactName">—</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-value" id="contactEmail">—</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-label">Phone</div>
+            <div class="contact-item-value" id="contactPhone">—</div>
+          </div>
+          <div class="additional-info-note" id="additionalInfo"></div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CERTIFICATED ESY APPLICATION
+  ════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-cert-esy" role="tabpanel">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <span class="breadcrumb">Applications</span>
+          <h1 class="page-title">Certificated ESY Application</h1>
+          <p class="page-subtitle">2026 Extended School Year — Special Education Certificated</p>
+        </div>
+        <div class="program-tag program-tag--esy">ESY Program</div>
+      </div>
+    </div>
+    <div class="form-container">
+      <div class="form-info-notice">
+        Completion and submission is a declaration of interest and availability for a certificated ESY position.
+        Pay is at a daily rate based on your class and step on the Certificated Salary Schedule for a <strong>14-day assignment</strong>.
+        Selection is determined by <strong>rotation and seniority</strong>. You must be available for the <strong>full 14-day calendar</strong> without interruption.
+        Return to the summer school Assistant Principal by <strong>April 22, 2026</strong>.
+      </div>
+      <form id="formCertESY" novalidate>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Personal Information</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group">
+              <label class="field-label" for="ce-name">Full Name <span class="required">*</span></label>
+              <input class="field-input" type="text" id="ce-name" name="Full Name" required placeholder="First Last">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-empid">Employee ID <span class="required">*</span></label>
+              <input class="field-input" type="text" id="ce-empid" name="Employee ID" required placeholder="e.g. 12345">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-phone">Phone Number <span class="required">*</span></label>
+              <input class="field-input" type="tel" id="ce-phone" name="Phone" required placeholder="(619) 555-5555">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-email">Email Address <span class="required">*</span></label>
+              <input class="field-input" type="email" id="ce-email" name="Email" required placeholder="you@guhsd.net">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-site">Current School Site <span class="required">*</span></label>
+              <input class="field-input" type="text" id="ce-site" name="Current School/Site" required placeholder="e.g. Grossmont High School">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-subject">Subject / Grades Taught in 25/26 <span class="required">*</span></label>
+              <input class="field-input" type="text" id="ce-subject" name="Subject/Grades Taught in 25/26" required placeholder="e.g. Resource — Grades 9–12">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Teaching Credential</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group field-group--full">
+              <label class="field-label">Credential Type <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Credential Type" value="Educational Specialist" required><span>Educational Specialist</span></label>
+                <label class="radio-option"><input type="radio" name="Credential Type" value="SPED Teacher"><span>SPED Teacher</span></label>
+              </div>
+            </div>
+            <div class="field-group field-group--full">
+              <label class="field-label">Authorization (SPED Teachers only)</label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Credential Authorization" value="M/M"><span>M/M — Mild/Moderate</span></label>
+                <label class="radio-option"><input type="radio" name="Credential Authorization" value="ESN"><span>ESN — Extensive Support Needs</span></label>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-auth">Authorized Subjects on Credential</label>
+              <input class="field-input" type="text" id="ce-auth" name="Authorized Subjects on Credential" placeholder="e.g. English, Math">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="ce-pref">Preferred Subject to Teach During ESY</label>
+              <input class="field-input" type="text" id="ce-pref" name="Preferred Subject to Teach During ESY" placeholder="e.g. Math Intervention">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Previous ESY Experience</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group">
+              <label class="field-label">Did you teach ESY in 24/25? <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Taught ESY 24/25" value="Yes" required><span>Yes</span></label>
+                <label class="radio-option"><input type="radio" name="Taught ESY 24/25" value="No"><span>No</span></label>
+              </div>
+            </div>
+            <div class="field-group" id="ce-prev-location-group" data-conditional style="display:none;">
+              <label class="field-label" for="ce-prev-loc">24/25 ESY Location</label>
+              <input class="field-input" type="text" id="ce-prev-loc" name="ESY 24/25 Location" placeholder="Site name">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Session Availability</h3>
+          <label class="field-label">Which sessions are you available for? <span class="required">*</span></label>
+          <p class="session-check-hint">Select all that apply.</p>
+          <div class="session-check-group">
+            <label class="session-check-option"><input type="checkbox" value="Session 1"><span>Session 1</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 2"><span>Session 2</span></label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Location Preference</h3>
+          <label class="field-label">Select sites you are interested in, in order of preference.</label>
+          <p class="field-hint" style="margin-bottom:var(--sp-3);">Click a site on the left to add it to your ranked list. Click the × on the right to remove it. Your first selection is your top choice.</p>
+          <div id="ce-location-picker"></div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Substitute Interest</h3>
+          <div class="field-group">
+            <label class="field-label">If not selected, are you interested in substituting? <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="Yes" required><span>Yes</span></label>
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="No"><span>No</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section form-section--acknowledge">
+          <h3 class="form-section-title">Acknowledgment</h3>
+          <div class="acknowledge-block">
+            <label class="checkbox-option">
+              <input type="checkbox" name="Signature Acknowledgment" value="Acknowledged" required>
+              <span>I understand I must be available for the <strong>full 14-day calendar without interruption</strong>. This application is <strong>not a confirmed assignment</strong> until the Special Education Department notifies me in writing. All information provided is accurate. <span class="required">*</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="AppForms.resetForm('formCertESY');AppForms.buildLocationPicker('ce-location-picker',['Any Site','Grossmont','El Cajon','Mt. Miguel','El Capitan','Granite Hills','Monte Vista','Santana','Valhalla','West Hills','Chap / IDEA','ELITE (Session I)','MERIT','Helix','Steele Canyon','ELITE (Session II)'])">Clear Form</button>
+          <button type="submit" class="btn btn-submit" id="submitCertESY">
+            <div class="btn-spinner"></div>
+            <span class="btn-text">Submit Application</span>
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CERTIFICATED SUMMER SCHOOL APPLICATION
+  ════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-cert-ss" role="tabpanel">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <span class="breadcrumb">Applications</span>
+          <h1 class="page-title">Certificated Summer School Application</h1>
+          <p class="page-subtitle">2026 Summer School Credit Recovery — Special Education Certificated</p>
+        </div>
+        <div class="program-tag program-tag--ss">Summer School</div>
+      </div>
+    </div>
+    <div class="form-container">
+      <div class="form-info-notice">
+        Completion and submission is a declaration of interest and availability for a Summer School Credit Recovery certificated position.
+        Pay is at a daily rate based on your class and step on the Certificated Salary Schedule for a <strong>14-day assignment</strong>.
+        Selection is determined by <strong>rotation and seniority</strong>. You must be available for the <strong>full 14-day calendar</strong> without interruption.
+        Return to the summer school Assistant Principal by <strong>April 22, 2026</strong>.
+      </div>
+      <form id="formCertSS" novalidate>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Personal Information</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group">
+              <label class="field-label" for="cs-name">Full Name <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cs-name" name="Full Name" required placeholder="First Last">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cs-empid">Employee ID <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cs-empid" name="Employee ID" required placeholder="e.g. 12345">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cs-phone">Phone Number <span class="required">*</span></label>
+              <input class="field-input" type="tel" id="cs-phone" name="Phone" required placeholder="(619) 555-5555">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cs-email">Email Address <span class="required">*</span></label>
+              <input class="field-input" type="email" id="cs-email" name="Email" required placeholder="you@guhsd.net">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cs-site">Current School Site <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cs-site" name="Current School/Site" required placeholder="e.g. Grossmont High School">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cs-subject">Subject / Grades Taught in 25/26 <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cs-subject" name="Subject/Grades Taught in 25/26" required placeholder="e.g. Resource — Grades 9–12">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Teaching Credential</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group field-group--full">
+              <label class="field-label">Credential Type <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Credential Type" value="Educational Specialist" required><span>Educational Specialist</span></label>
+                <label class="radio-option"><input type="radio" name="Credential Type" value="SPED Teacher"><span>SPED Teacher</span></label>
+              </div>
+            </div>
+            <div class="field-group field-group--full">
+              <label class="field-label">Authorization (SPED Teachers only)</label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Credential Authorization" value="M/M"><span>M/M — Mild/Moderate</span></label>
+                <label class="radio-option"><input type="radio" name="Credential Authorization" value="ESN"><span>ESN — Extensive Support Needs</span></label>
+              </div>
+            </div>
+            <div class="field-group field-group--full">
+              <label class="field-label" for="cs-auth">Authorized Subjects on Credential</label>
+              <input class="field-input" type="text" id="cs-auth" name="Authorized Subjects on Credential" placeholder="e.g. English, Math">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Previous Summer School Experience</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group">
+              <label class="field-label">Did you teach Summer School Credit Recovery in 24/25? <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="Taught Summer School 24/25" value="Yes" required><span>Yes</span></label>
+                <label class="radio-option"><input type="radio" name="Taught Summer School 24/25" value="No"><span>No</span></label>
+              </div>
+            </div>
+            <div class="field-group" id="cs-prev-location-group" data-conditional style="display:none;">
+              <label class="field-label" for="cs-prev-loc">24/25 Summer School Location</label>
+              <input class="field-input" type="text" id="cs-prev-loc" name="Summer School 24/25 Location" placeholder="Site name">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Session Availability</h3>
+          <label class="field-label">Which sessions are you available for? <span class="required">*</span></label>
+          <p class="session-check-hint">Select all that apply.</p>
+          <div class="session-check-group">
+            <label class="session-check-option"><input type="checkbox" value="Session 1"><span>Session 1</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 2"><span>Session 2</span></label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Location Preference</h3>
+          <label class="field-label">Select sites you are interested in, in order of preference.</label>
+          <p class="field-hint" style="margin-bottom:var(--sp-3);">Click a site on the left to add it to your ranked list. Click the × to remove it. Your first selection is your top choice.</p>
+          <div id="cs-location-picker"></div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Substitute Interest</h3>
+          <div class="field-group">
+            <label class="field-label">If not selected, are you interested in substituting? <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="Yes" required><span>Yes</span></label>
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="No"><span>No</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section form-section--acknowledge">
+          <h3 class="form-section-title">Acknowledgment</h3>
+          <div class="acknowledge-block">
+            <label class="checkbox-option">
+              <input type="checkbox" name="Signature Acknowledgment" value="Acknowledged" required>
+              <span>I understand I must be available for the <strong>full 14-day calendar without interruption</strong>. This application is <strong>not a confirmed assignment</strong> until the Special Education Department notifies me in writing. All information provided is accurate. <span class="required">*</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="AppForms.resetForm('formCertSS');AppForms.buildLocationPicker('cs-location-picker',['Any Site','Grossmont','El Cajon','Mt. Miguel','El Capitan','Granite Hills','Monte Vista','Santana','Valhalla','West Hills','Chap / IDEA','MERIT','Helix','Steele Canyon'])">Clear Form</button>
+          <button type="submit" class="btn btn-submit" id="submitCertSS">
+            <div class="btn-spinner"></div>
+            <span class="btn-text">Submit Application</span>
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CLASSIFIED ESY APPLICATION
+  ════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-class-esy" role="tabpanel">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <span class="breadcrumb">Applications</span>
+          <h1 class="page-title">Classified ESY Application</h1>
+          <p class="page-subtitle">2026 Extended School Year / Summer School — Special Education Classified</p>
+        </div>
+        <div class="program-tag program-tag--class">Classified</div>
+      </div>
+    </div>
+    <div class="form-container">
+      <div class="form-info-notice">
+        Completion and submission is a declaration of interest and availability for a classified ESY/Summer School position.
+        All contracts are conditional on enrollment. Once you receive an offer you have <strong>5 days</strong> to accept or reject it.
+        You must be available for the <strong>full 14 days without interruption</strong>.
+        Return to the summer school Assistant Principal by <strong>April 22, 2026</strong>.
+      </div>
+      <form id="formClassESY" novalidate>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Personal Information</h3>
+          <div class="form-grid form-grid--2">
+            <div class="field-group">
+              <label class="field-label" for="cl-name">Full Name <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-name" name="Full Name" required placeholder="First Last">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-empid">Employee ID <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-empid" name="Employee ID" required placeholder="e.g. 12345">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-jobtitle">Job Title <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-jobtitle" name="Job Title" required placeholder="e.g. Special Ed Aide M/M">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-site">Current Site <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-site" name="Current School/Site" required placeholder="e.g. Grossmont High School">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-phone">Phone Number <span class="required">*</span></label>
+              <input class="field-input" type="tel" id="cl-phone" name="Phone" required placeholder="(619) 555-5555">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-email">Email Address <span class="required">*</span></label>
+              <input class="field-input" type="email" id="cl-email" name="Email" required placeholder="you@guhsd.net">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Position Served in 25/26 School Year</h3>
+          <p class="field-hint" style="margin-bottom:var(--sp-3);">Check all that apply.</p>
+          <div class="checkbox-grid" id="cl-position-checks">
+            <label class="checkbox-card"><input type="checkbox" value="Special Ed Aide M/M">Special Ed Aide M/M</label>
+            <label class="checkbox-card"><input type="checkbox" value="Behavior Intervention Assistant (ELITE/Itinerant)">Behavior Intervention Assistant (ELITE / Itinerant)</label>
+            <label class="checkbox-card"><input type="checkbox" value="Special Ed Aide M/S">Special Ed Aide M/S</label>
+            <label class="checkbox-card"><input type="checkbox" value="COTA">COTA</label>
+            <label class="checkbox-card"><input type="checkbox" value="SLPA">SLPA</label>
+            <label class="checkbox-card"><input type="checkbox" value="LVN (ELITE)">LVN (ELITE)</label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Session Availability</h3>
+          <label class="field-label">Which sessions are you available for? <span class="required">*</span></label>
+          <p class="session-check-hint">Select all that apply.</p>
+          <div class="session-check-group">
+            <label class="session-check-option"><input type="checkbox" value="Session 1"><span>Session 1</span></label>
+            <label class="session-check-option"><input type="checkbox" value="Session 2"><span>Session 2</span></label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Location Preference</h3>
+          <label class="field-label">Select sites you are interested in, in order of preference.</label>
+          <p class="field-hint" style="margin-bottom:var(--sp-3);">Click a site on the left to add it to your ranked list. Click the × to remove it. Your first selection is your top choice.</p>
+          <div id="cl-location-picker"></div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title">Substitute Interest</h3>
+          <div class="field-group">
+            <label class="field-label">If not selected, are you interested in substituting? <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="Yes" required><span>Yes</span></label>
+              <label class="radio-option"><input type="radio" name="Interested in Substituting" value="No"><span>No</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section form-section--acknowledge">
+          <h3 class="form-section-title">Acknowledgment</h3>
+          <div class="acknowledge-block">
+            <label class="checkbox-option">
+              <input type="checkbox" name="Signature Acknowledgment" value="Acknowledged" required>
+              <span>I understand I must be available for the <strong>full 14 days without interruption</strong>. This application is <strong>not a confirmed assignment</strong> until the Special Education Department notifies me in writing. All information provided is accurate. <span class="required">*</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="AppForms.resetForm('formClassESY');AppForms.buildLocationPicker('cl-location-picker',['Any Site','Grossmont','El Cajon','Mt. Miguel','El Capitan','Granite Hills','Monte Vista','Santana','Valhalla','West Hills','Chap / IDEA','ELITE (Session I)','MERIT','Helix','Steele Canyon','ELITE (Session II)'])">Clear Form</button>
+          <button type="submit" class="btn btn-submit" id="submitClassESY">
+            <div class="btn-spinner"></div>
+            <span class="btn-text">Submit Application</span>
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       ADMIN PANEL (admin users only)
+  ════════════════════════════════════════ -->
+  <?if (isAdmin) {?>
+  <section class="tab-panel" id="tab-admin" role="tabpanel">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <span class="breadcrumb">Administration</span>
+          <h1 class="page-title">Admin Panel</h1>
+          <p class="page-subtitle">Edit the information displayed on the Program Information tab. Changes are saved directly to the spreadsheet and reflected immediately.</p>
+        </div>
+        <div class="program-tag program-tag--admin">Admin Only</div>
+      </div>
+    </div>
+
+    <!-- Access denied state (shown if server-side check fails) -->
+    <div class="admin-denied" id="adminDenied" style="display:none;">
+      <div class="admin-denied-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      </div>
+      <h2>Access Denied</h2>
+      <p>Your account does not have permission to access the admin panel. Please contact your system administrator to be added to the authorized list.</p>
+    </div>
+
+    <!-- Admin panel content -->
+    <div class="admin-content" id="adminPanelContent">
+
+      <!-- Home Screen Text -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/></svg>
+          </div>
+          <div>
+            <h3>Home Screen Text</h3>
+            <p>Announcement banner and application deadline shown at the top of the page.</p>
+          </div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid admin-grid--1">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-announcementMsg">Announcement Message</label>
+              <span class="admin-description">Displayed as the subtitle under "Program Information"</span>
+              <textarea class="field-textarea" id="admin-announcementMsg" rows="3"></textarea>
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-applicationDeadline">Application Deadline</label>
+              <span class="admin-description">Shown in the red deadline chip (e.g. "April 22, 2026")</span>
+              <input class="field-input" type="text" id="admin-applicationDeadline" placeholder="e.g. April 22, 2026">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shared Schedule -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+          </div>
+          <div>
+            <h3>Shared Schedule — Comprehensive, Chap/IDEA &amp; MERIT</h3>
+            <p>These dates and times apply to all standard sites for both ESY and Summer School.</p>
+          </div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-sharedDates">Program Dates</label>
+              <input class="field-input" type="text" id="admin-sharedDates" placeholder="e.g. 6/8/26 – 6/26/26 (no school 6/19)">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-sharedSessionI">Session I Hours</label>
+              <input class="field-input" type="text" id="admin-sharedSessionI" placeholder="e.g. 8:00 am – 11:00 am">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-sharedSessionII">Session II Hours</label>
+              <input class="field-input" type="text" id="admin-sharedSessionII" placeholder="e.g. 11:45 am – 2:45 pm">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ELITE -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon" style="background:var(--color-accent-esy);">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <div><h3>ELITE Academy</h3><p>ESY only — has two separate session date ranges.</p></div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-eliteSessIDates">Session I Dates</label>
+              <input class="field-input" type="text" id="admin-eliteSessIDates" placeholder="e.g. 6/8/26 – 6/26/26">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-eliteSessIIDates">Session II Dates</label>
+              <input class="field-input" type="text" id="admin-eliteSessIIDates" placeholder="e.g. 6/29/26 – 7/17/26">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-eliteHours">Daily Hours</label>
+              <input class="field-input" type="text" id="admin-eliteHours" placeholder="e.g. 9:30 am – 1:30 pm">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-eliteNoSchool">No School Note</label>
+              <input class="field-input" type="text" id="admin-eliteNoSchool" placeholder="e.g. No school 6/19 or 7/3">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Helix -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon" style="background:var(--color-primary-light);">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/></svg>
+          </div>
+          <div><h3>Helix Charter</h3><p>ESY and Summer School Credit Recovery.</p></div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-helixDates">Dates</label>
+              <input class="field-input" type="text" id="admin-helixDates" placeholder="e.g. 6/10/26 – 7/1/26">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-helixSessIHours">Session I Hours</label>
+              <input class="field-input" type="text" id="admin-helixSessIHours" placeholder="e.g. 8:00 – 11:15 am">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-helixSessIIHours">Session II Hours</label>
+              <input class="field-input" type="text" id="admin-helixSessIIHours" placeholder="e.g. 11:45 am – 3:00 pm">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-helixNoSchool">No School Note</label>
+              <input class="field-input" type="text" id="admin-helixNoSchool" placeholder="e.g. No school 6/19">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steele Canyon -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon" style="background:var(--color-primary-light);">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/></svg>
+          </div>
+          <div><h3>Steele Canyon</h3><p>ESY and Summer School Credit Recovery.</p></div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-steeleDates">Dates</label>
+              <input class="field-input" type="text" id="admin-steeleDates" placeholder="e.g. 6/8/26 – 6/26/26">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-steeleSessIHours">Session I Hours</label>
+              <input class="field-input" type="text" id="admin-steeleSessIHours" placeholder="e.g. 8:00 am – 12:45 pm">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-steeleNoSchool">No School Note</label>
+              <input class="field-input" type="text" id="admin-steeleNoSchool" placeholder="e.g. No school 6/19">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+          </div>
+          <div><h3>Contact Information</h3><p>Shown in the Contact &amp; Additional Information section on the home tab.</p></div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-contactName">Contact Name / Title</label>
+              <input class="field-input" type="text" id="admin-contactName" placeholder="e.g. Special Education Department">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-contactEmail">Contact Email</label>
+              <input class="field-input" type="email" id="admin-contactEmail" placeholder="e.g. sped@guhsd.net">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-contactPhone">Contact Phone</label>
+              <input class="field-input" type="tel" id="admin-contactPhone" placeholder="e.g. (619) 644-8000">
+            </div>
+            <div class="admin-field admin-field--full">
+              <label class="admin-label" for="admin-additionalInfo">Additional Information Note</label>
+              <span class="admin-description">Italic note shown at the bottom of the contact card.</span>
+              <textarea class="field-textarea" id="admin-additionalInfo" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /adminPanelContent -->
+
+    <!-- Sticky save bar -->
+    <div class="admin-save-bar">
+      <span class="admin-save-status" id="adminSaveStatus"></span>
+      <button class="btn-admin-save" id="adminSaveBtn" onclick="AppAdmin.save()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293z"/>
+        </svg>
+        Save Changes
+      </button>
+    </div>
+
+  </section>
+  <?}?>
+
+</main><!-- /main-content -->
+
+
+<!-- Success Modal -->
+<div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+  <div class="modal">
+    <div class="modal-icon modal-icon--success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+    <h2 class="modal-title" id="successTitle">Application Submitted!</h2>
+    <p class="modal-body" id="successMsg">Your application has been received.</p>
+    <button class="btn btn-primary modal-close-btn" onclick="AppModals.closeSuccess()">Done</button>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal-backdrop" id="errorModal" role="dialog" aria-modal="true" aria-labelledby="errorTitle">
+  <div class="modal">
+    <div class="modal-icon modal-icon--error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </div>
+    <h2 class="modal-title" id="errorTitle">Submission Error</h2>
+    <p class="modal-body" id="errorMsg">Something went wrong. Please try again or contact HR.</p>
+    <button class="btn btn-primary modal-close-btn" onclick="AppModals.closeError()">Close</button>
+  </div>
+</div>
+
+<?!= include('JS_Nav');    ?>
+<?!= include('JS_Data');   ?>
+<?!= include('JS_Forms');  ?>
+<?!= include('JS_Modals'); ?>
+<?!= include('JS_Admin');  ?>
+
+</body>
+</html>
