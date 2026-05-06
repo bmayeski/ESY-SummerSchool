@@ -1,0 +1,95 @@
+<script>
+/* ============================================================
+   JS_Data.html — Fetches Admin Info sheet values and
+   populates the Program Information home tab
+============================================================ */
+
+const AppData = (() => {
+
+  // Maps spreadsheet keys → element IDs on the home tab
+  const FIELD_MAP = {
+    announcementMsg:    'announcementMsg',
+    applicationDeadline:'deadlineDate',
+    // Shared schedule
+    sharedDates:        'sharedDates',
+    sharedSessionI:     'sharedSessionI',
+    sharedSessionII:    'sharedSessionII',
+    // ELITE
+    eliteSessIDates:    'eliteSessIDates',
+    eliteSessIIDates:   'eliteSessIIDates',
+    eliteHours:         'eliteHours',
+    eliteNoSchool:      'eliteNoSchool',
+    // Helix
+    helixDates:         'helixDates',
+    helixSessIHours:    'helixSessIHours',
+    helixSessIIHours:   'helixSessIIHours',
+    helixNoSchool:      'helixNoSchool',
+    // Steele
+    steeleDates:        'steeleDates',
+    steeleSessIHours:   'steeleSessIHours',
+    steeleNoSchool:     'steeleNoSchool',
+    // Contact
+    contactName:        'contactName',
+    contactEmail:       'contactEmail',
+    contactPhone:       'contactPhone',
+    additionalInfo:     'additionalInfo'
+  };
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el && value !== undefined) el.textContent = value;
+  }
+
+  function populatePage(data) {
+    for (const [key, elId] of Object.entries(FIELD_MAP)) {
+      if (data[key] !== undefined) setText(elId, data[key]);
+    }
+  }
+
+  function hideLoading() {
+    document.getElementById('loadingOverlay')?.classList.add('hidden');
+  }
+
+  function showLoadError() {
+    const el = document.getElementById('loadingOverlay');
+    if (el) {
+      el.innerHTML = `
+        <div style="text-align:center;color:var(--color-text-muted);">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               style="margin:0 auto var(--sp-3);display:block;opacity:0.5;">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p style="font-size:0.875rem;">Could not load program info.<br>Please refresh or contact HR.</p>
+        </div>`;
+    }
+  }
+
+  function init() {
+    google.script.run
+      .withSuccessHandler(result => {
+        hideLoading();
+        if (result && result.success) {
+          populatePage(result.data);
+        } else {
+          showLoadError();
+        }
+      })
+      .withFailureHandler(() => {
+        hideLoading();
+        showLoadError();
+      })
+      .getAdminInfo();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  return { init };
+
+})();
+</script>
