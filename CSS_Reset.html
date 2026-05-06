@@ -1,0 +1,74 @@
+<style>
+/* ============================================================
+   CSS_Reset.html — Base reset, CSS variables, typography
+   Grossmont Union High School District | 2026
+============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Brand */
+  --color-primary:        #1a3a5c;
+  --color-primary-dark:   #0f2340;
+  --color-primary-light:  #2563a8;
+  --color-accent-esy:     #c8102e;
+  --color-accent-ss:      #e87722;
+  --color-accent-class:   #1a7a4a;
+  --color-accent-admin:   #6d28d9;
+
+  /* Neutrals */
+  --color-bg:             #f0f2f5;
+  --color-surface:        #ffffff;
+  --color-border:         #dde2ea;
+  --color-border-focus:   #2563a8;
+  --color-text:           #1c2333;
+  --color-text-sub:       #4a5568;
+  --color-text-muted:     #718096;
+  --color-placeholder:    #a0aec0;
+
+  /* Sidebar */
+  --sidebar-width:        264px;
+  --sidebar-bg:           #0f2340;
+  --sidebar-text:         #b8cde0;
+  --sidebar-active-bg:    rgba(255,255,255,0.11);
+  --sidebar-active-text:  #ffffff;
+  --sidebar-hover-bg:     rgba(255,255,255,0.06);
+  --sidebar-border:       rgba(255,255,255,0.08);
+
+  /* Spacing */
+  --sp-1:4px;  --sp-2:8px;   --sp-3:12px; --sp-4:16px;
+  --sp-5:20px; --sp-6:24px;  --sp-8:32px; --sp-10:40px; --sp-12:48px;
+
+  /* Radii */
+  --r-sm:4px; --r-md:8px; --r-lg:12px; --r-xl:18px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.13);
+
+  --transition: 170ms ease;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 600; color: var(--color-text); }
+p { color: var(--color-text-sub); }
+button { cursor: pointer; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+</style>
