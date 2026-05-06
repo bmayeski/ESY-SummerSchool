@@ -1,0 +1,384 @@
+<script>
+/* ============================================================
+   JS_Forms.html — Two-panel location picker, session
+   checkboxes, form validation, serialization, and submission
+   for all three application forms
+============================================================ */
+
+const AppForms = (() => {
+
+  // ── Location sites per form ───────────────────────────────
+  // ESY sites include ELITE; Summer School does not
+  const SITES_ESY = [
+    'Any Site','Grossmont','El Cajon','Mt. Miguel',
+    'El Capitan','Granite Hills','Monte Vista','Santana',
+    'Valhalla','West Hills','Chap / IDEA',
+    'ELITE (Session I)','MERIT','Helix','Steele Canyon','ELITE (Session II)'
+  ];
+
+  const SITES_SS = [
+    'Any Site','Grossmont','El Cajon','Mt. Miguel',
+    'El Capitan','Granite Hills','Monte Vista','Santana',
+    'Valhalla','West Hills','Chap / IDEA',
+    'MERIT','Helix','Steele Canyon'
+  ];
+
+  // ── Build a two-panel location picker ────────────────────
+  // containerId: wrapping div id
+  // sites: array of site name strings
+  function buildLocationPicker(containerId, sites) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // State: ordered list of chosen sites
+    let ranked = [];
+
+    function render() {
+      const available = sites.filter(s => !ranked.includes(s));
+
+      container.innerHTML = `
+        <div class="location-picker">
+          <!-- Left: available -->
+          <div class="picker-panel">
+            <div class="picker-panel-header">
+              Available Sites
+              <span>${available.length} remaining</span>
+            </div>
+            <div class="picker-panel-body" id="${containerId}-available">
+              ${available.length === 0
+                ? '<div class="picker-empty-state">All sites have been ranked.</div>'
+                : available.map(s => `
+                    <button type="button" class="site-option" onclick="AppForms.pickSite('${containerId}','${s.replace(/'/g,"\\'")}')">
+                      <span class="site-option-icon">+</span>
+                      ${s}
+                    </button>`).join('')
+              }
+            </div>
+          </div>
+          <!-- Right: ranked -->
+          <div class="picker-panel">
+            <div class="picker-panel-header">
+              Your Preference Order
+              <span>${ranked.length} selected</span>
+            </div>
+            <div class="picker-panel-body" id="${containerId}-ranked">
+              ${ranked.length === 0
+                ? '<div class="picker-empty-state">Click sites on the left to add them in your preferred order.</div>'
+                : ranked.map((s, i) => `
+                    <div class="ranked-site">
+                      <span class="ranked-site-num">${i + 1}</span>
+                      <span class="ranked-site-name">${s}</span>
+                      <button type="button" class="ranked-site-remove"
+                              onclick="AppForms.removeSite('${containerId}','${s.replace(/'/g,"\\'")}')">
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                      </button>
+                    </div>`).join('')
+              }
+            </div>
+          </div>
+        </div>`;
+
+      // Store ranked list on the container for serialization
+      container._ranked = ranked;
+    }
+
+    // Expose add/remove via AppForms so inline onclick works
+    container._addSite    = (s) => { if (!ranked.includes(s)) { ranked.push(s); render(); } };
+    container._removeSite = (s) => { ranked = ranked.filter(x => x !== s); render(); };
+
+    render();
+  }
+
+  // Public: called by inline onclick handlers
+  function pickSite(containerId, site) {
+    document.getElementById(containerId)?._addSite(site);
+  }
+  function removeSite(containerId, site) {
+    document.getElementById(containerId)?._removeSite(site);
+  }
+
+  // Get serialized location data (Option 3: ranked string + top choice)
+  function getLocationData(containerId) {
+    const container = document.getElementById(containerId);
+    const ranked    = container?._ranked || [];
+    return {
+      rankedString: ranked.join(', '),
+      topChoice:    ranked[0] || ''
+    };
+  }
+
+  // ── Session checkboxes ─────────────────────────────────────
+  function getSessionData(formEl) {
+    const checked = [];
+    formEl.querySelectorAll('.session-check-option input:checked').forEach(cb => {
+      checked.push(cb.value);
+    });
+    return checked.join(', ');
+  }
+
+  // ── Classified position checkboxes ────────────────────────
+  function getPositionData(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return '';
+    const checked = [];
+    container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+      checked.push(cb.value);
+    });
+    return checked.join(', ');
+  }
+
+  // ── Form serialization ────────────────────────────────────
+  function serializeForm(formEl) {
+    const data = {};
+    formEl.querySelectorAll('[name]').forEach(el => {
+      if (!el.name) return;
+      if (el.type === 'checkbox') {
+        if (el.checked) data[el.name] = el.value;
+        else if (!(el.name in data)) data[el.name] = '';
+      } else if (el.type === 'radio') {
+        if (el.checked) data[el.name] = el.value;
+        else if (!(el.name in data)) data[el.name] = '';
+      } else {
+        data[el.name] = el.value.trim();
+      }
+    });
+    return data;
+  }
+
+  // ── Validation ────────────────────────────────────────────
+  function setFieldError(fieldEl, msg) {
+    if (!fieldEl) return;
+    fieldEl.classList.add('error');
+    let errEl = fieldEl.parentElement.querySelector('.field-error-msg');
+    if (!errEl) {
+      errEl = document.createElement('span');
+      errEl.className = 'field-error-msg';
+      fieldEl.parentElement.appendChild(errEl);
+    }
+    errEl.textContent = msg;
+    errEl.classList.add('visible');
+  }
+
+  function clearFieldError(fieldEl) {
+    if (!fieldEl) return;
+    fieldEl.classList.remove('error');
+    fieldEl.parentElement.querySelector('.field-error-msg')?.classList.remove('visible');
+  }
+
+  function validateForm(formEl) {
+    let valid = true;
+
+    // Clear previous errors
+    formEl.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    formEl.querySelectorAll('.field-error-msg.visible').forEach(el => el.classList.remove('visible'));
+
+    // Required text/email/select/textarea
+    formEl.querySelectorAll('[required]').forEach(el => {
+      if (el.type === 'radio' || el.type === 'checkbox') return;
+      if (!el.value.trim()) { setFieldError(el, 'This field is required.'); valid = false; }
+      if (el.type === 'email' && el.value && !el.value.includes('@')) {
+        setFieldError(el, 'Please enter a valid email address.'); valid = false;
+      }
+    });
+
+    // Required radio groups
+    const radioGroups = {};
+    formEl.querySelectorAll('input[type="radio"][required]').forEach(r => {
+      radioGroups[r.name] = radioGroups[r.name] || [];
+      radioGroups[r.name].push(r);
+    });
+    for (const radios of Object.values(radioGroups)) {
+      if (!radios.some(r => r.checked)) {
+        setFieldError(radios[0], 'Please select an option.');
+        valid = false;
+      }
+    }
+
+    // Required checkboxes
+    formEl.querySelectorAll('input[type="checkbox"][required]').forEach(cb => {
+      if (!cb.checked) { setFieldError(cb, 'You must acknowledge this to continue.'); valid = false; }
+    });
+
+    if (!valid) {
+      const first = formEl.querySelector('.error');
+      first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return valid;
+  }
+
+  function attachLiveValidation(formEl) {
+    formEl.querySelectorAll('.field-input,.field-select,.field-textarea').forEach(el => {
+      el.addEventListener('input',  () => clearFieldError(el));
+      el.addEventListener('change', () => clearFieldError(el));
+    });
+  }
+
+  function attachConditional(formEl, radioName, showValue, targetId) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    formEl.querySelectorAll(`input[name="${radioName}"]`).forEach(r => {
+      r.addEventListener('change', () => {
+        const show = r.value === showValue && r.checked;
+        target.style.display = show ? '' : 'none';
+        if (!show) target.querySelectorAll('input,select,textarea').forEach(el => el.value = '');
+      });
+    });
+  }
+
+  function setSubmitting(btnId, on) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.classList.toggle('submitting', on);
+    btn.disabled = on;
+  }
+
+  function resetForm(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    form.reset();
+    form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    form.querySelectorAll('.field-error-msg').forEach(el => el.classList.remove('visible'));
+    form.querySelectorAll('[data-conditional]').forEach(el => el.style.display = 'none');
+    // Re-render location pickers to their empty state
+    form.querySelectorAll('[id$="-location-picker"]').forEach(el => el._ranked && (el._ranked = []) && el._addSite && buildLocationPicker(el.id, el._sites));
+  }
+
+  // ── CERTIFICATED ESY ──────────────────────────────────────
+  function initCertESY() {
+    const form = document.getElementById('formCertESY');
+    if (!form) return;
+
+    buildLocationPicker('ce-location-picker', SITES_ESY);
+    attachLiveValidation(form);
+    attachConditional(form, 'Taught ESY 24/25', 'Yes', 'ce-prev-location-group');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateForm(form)) return;
+      setSubmitting('submitCertESY', true);
+
+      const data = serializeForm(form);
+      const loc  = getLocationData('ce-location-picker');
+      data['Session Availability']        = getSessionData(form);
+      data['Location Preference (Ranked)']= loc.rankedString;
+      data['Top Location Choice']         = loc.topChoice;
+
+      google.script.run
+        .withSuccessHandler(res => {
+          setSubmitting('submitCertESY', false);
+          if (res && res.success) {
+            AppModals.showSuccess('Application Submitted!',
+              `Thank you, ${data['Full Name'] || 'applicant'}! Your Certificated ESY application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            resetForm('formCertESY');
+            buildLocationPicker('ce-location-picker', SITES_ESY);
+          } else {
+            AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
+          }
+        })
+        .withFailureHandler(() => {
+          setSubmitting('submitCertESY', false);
+          AppModals.showError('Submission Error', 'A server error occurred. Please try again or contact HR.');
+        })
+        .submitCertESY(data);
+    });
+  }
+
+  // ── CERTIFICATED SUMMER SCHOOL ────────────────────────────
+  function initCertSS() {
+    const form = document.getElementById('formCertSS');
+    if (!form) return;
+
+    buildLocationPicker('cs-location-picker', SITES_SS);
+    attachLiveValidation(form);
+    attachConditional(form, 'Taught Summer School 24/25', 'Yes', 'cs-prev-location-group');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateForm(form)) return;
+      setSubmitting('submitCertSS', true);
+
+      const data = serializeForm(form);
+      const loc  = getLocationData('cs-location-picker');
+      data['Session Availability']        = getSessionData(form);
+      data['Location Preference (Ranked)']= loc.rankedString;
+      data['Top Location Choice']         = loc.topChoice;
+
+      google.script.run
+        .withSuccessHandler(res => {
+          setSubmitting('submitCertSS', false);
+          if (res && res.success) {
+            AppModals.showSuccess('Application Submitted!',
+              `Thank you, ${data['Full Name'] || 'applicant'}! Your Certificated Summer School application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            resetForm('formCertSS');
+            buildLocationPicker('cs-location-picker', SITES_SS);
+          } else {
+            AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
+          }
+        })
+        .withFailureHandler(() => {
+          setSubmitting('submitCertSS', false);
+          AppModals.showError('Submission Error', 'A server error occurred. Please try again or contact HR.');
+        })
+        .submitCertSS(data);
+    });
+  }
+
+  // ── CLASSIFIED ESY ────────────────────────────────────────
+  function initClassESY() {
+    const form = document.getElementById('formClassESY');
+    if (!form) return;
+
+    buildLocationPicker('cl-location-picker', SITES_ESY);
+    attachLiveValidation(form);
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validateForm(form)) return;
+      setSubmitting('submitClassESY', true);
+
+      const data = serializeForm(form);
+      const loc  = getLocationData('cl-location-picker');
+      data['25/26 Position(s)']           = getPositionData('cl-position-checks');
+      data['Session Availability']        = getSessionData(form);
+      data['Location Preference (Ranked)']= loc.rankedString;
+      data['Top Location Choice']         = loc.topChoice;
+
+      google.script.run
+        .withSuccessHandler(res => {
+          setSubmitting('submitClassESY', false);
+          if (res && res.success) {
+            AppModals.showSuccess('Application Submitted!',
+              `Thank you, ${data['Full Name'] || 'applicant'}! Your Classified ESY application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            resetForm('formClassESY');
+            buildLocationPicker('cl-location-picker', SITES_ESY);
+          } else {
+            AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
+          }
+        })
+        .withFailureHandler(() => {
+          setSubmitting('submitClassESY', false);
+          AppModals.showError('Submission Error', 'A server error occurred. Please try again or contact HR.');
+        })
+        .submitClassESY(data);
+    });
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  function init() {
+    initCertESY();
+    initCertSS();
+    initClassESY();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  return { resetForm, pickSite, removeSite, buildLocationPicker };
+
+})();
+</script>
