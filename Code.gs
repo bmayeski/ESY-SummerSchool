@@ -1,6 +1,6 @@
 // ============================================================
 //  Code.gs  —  ESY / Summer School Application Web App
-//  Grossmont Union High School District  |  2026
+//  Grossmont Union High School District  | 2026
 //
 //  SETUP STEPS:
 //  1. Create a new Google Spreadsheet and paste its ID into
@@ -10,7 +10,7 @@
 //     (Run > Run function > setupSpreadsheet).
 //  4. Deploy as Web App:
 //     Deploy > New deployment > Web App
-//     Execute as: Me  |  Who has access: Anyone in [your domain]
+//     Execute as: Me  | Who has access: Anyone in [your domain]
 //
 //  ADMIN PANEL ACCESS:
 //  Navigate to your web app URL with ?admin=true appended.
@@ -29,7 +29,6 @@ const ADMIN_EMAILS = [
   // 'another.admin@guhsd.net',
 ];
 
-
 // ── SHEET NAMES ─────────────────────────────────────────────
 const SHEET_NAMES = {
   CERT_ESY:   'Certificated ESY',
@@ -37,7 +36,6 @@ const SHEET_NAMES = {
   CLASS_ESY:  'Classified ESY',
   ADMIN_INFO: 'Admin Info'
 };
-
 
 // ── COLUMN HEADERS ───────────────────────────────────────────
 // Location uses Option 3: two columns — full ranked list + top choice.
@@ -57,8 +55,8 @@ const HEADERS = {
     'Credential Authorization',
     'Authorized Subjects on Credential',
     'Preferred Subject to Teach During ESY',
-    'Taught ESY 24/25',
-    'ESY 24/25 Location',
+    'Previous ESY Years',
+    'Previous ESY Location',
     'Session Availability',           // e.g. "Session 1, Session 2"
     'Location Preference (Ranked)',   // e.g. "Grossmont, El Cajon, Monte Vista"
     'Top Location Choice',            // e.g. "Grossmont"
@@ -77,8 +75,8 @@ const HEADERS = {
     'Credential Type',
     'Credential Authorization',
     'Authorized Subjects on Credential',
-    'Taught Summer School 24/25',
-    'Summer School 24/25 Location',
+    'Previous Summer School Years',
+    'Previous Summer School Location',
     'Session Availability',           // e.g. "Session 1, Session 2"
     'Location Preference (Ranked)',
     'Top Location Choice',
@@ -103,7 +101,6 @@ const HEADERS = {
   ]
 
 };
-
 
 // ── WEB APP ENTRY POINT ─────────────────────────────────────
 function doGet(e) {
@@ -210,7 +207,7 @@ function _ensureAdminSheet(ss) {
     ['helixDates',        '6/10/26 – 7/1/26',         'Helix Charter dates'],
     ['helixSessIHours',   '8:00 am – 11:15 am',       'Helix Session I hours'],
     ['helixSessIIHours',  '11:45 am – 3:00 pm',       'Helix Session II hours'],
-    ['helixNoSchool',     'No school 6/19',            'Helix no-school note'],
+    ['helixNoSchool',     'No school 6/19',           'Helix no-school note'],
 
     // ── Steele Canyon ────────────────────────────────────
     ['steeleDates',       '6/8/26 – 6/26/26',         'Steele Canyon dates'],
@@ -255,6 +252,7 @@ function getAdminInfo() {
       if (key) info[key] = val;
     }
     return { success: true, data: info };
+
   } catch (e) {
     Logger.log('getAdminInfo error: ' + e.message);
     return { success: false, error: e.message };
@@ -277,6 +275,7 @@ function saveAdminInfo(updates) {
     const rows  = sheet.getDataRange().getValues();
 
     let saved = 0;
+
     for (let i = 1; i < rows.length; i++) {
       const key = String(rows[i][0]).trim();
       if (key && updates.hasOwnProperty(key)) {
@@ -287,6 +286,7 @@ function saveAdminInfo(updates) {
 
     SpreadsheetApp.flush();
     return { success: true, saved };
+
   } catch (e) {
     Logger.log('saveAdminInfo error: ' + e.message);
     return { success: false, error: e.message };
