@@ -42,7 +42,27 @@ const AppData = (() => {
 
   function populatePage(data) {
     for (const [key, elId] of Object.entries(FIELD_MAP)) {
-      if (data[key] !== undefined) setText(elId, data[key]);
+      if (data[key] !== undefined) {
+        let value = data[key];
+        
+        // Check if this is the deadline field
+        if (key === 'applicationDeadline') {
+          const dateObj = new Date(value);
+          
+          // Verify it successfully parsed into a date
+          if (!isNaN(dateObj)) {
+            // Format to: "Wednesday, April 22, 2026"
+            value = dateObj.toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+          }
+        }
+        
+        setText(elId, value);
+      }
     }
   }
 
