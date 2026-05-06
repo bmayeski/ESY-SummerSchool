@@ -149,7 +149,7 @@ const AppForms = (() => {
     return data;
   }
 
-  // ── Validation ────────────────────────────────────────────
+  // ── Validation & Interactivity ────────────────────────────
   function setFieldError(fieldEl, msg) {
     if (!fieldEl) return;
     fieldEl.classList.add('error');
@@ -167,6 +167,24 @@ const AppForms = (() => {
     if (!fieldEl) return;
     fieldEl.classList.remove('error');
     fieldEl.parentElement.querySelector('.field-error-msg')?.classList.remove('visible');
+  }
+
+  // Allow users to uncheck radio buttons by clicking them again
+  function attachRadioDeselect(formEl) {
+    formEl.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('click', function(e) {
+        if (this.classList.contains('is-checked')) {
+          this.checked = false;
+          this.classList.remove('is-checked');
+          this.dispatchEvent(new Event('change'));
+          clearFieldError(this);
+        } else {
+          // Unmark all other radios in the same group
+          formEl.querySelectorAll(`input[name="${this.name}"]`).forEach(r => r.classList.remove('is-checked'));
+          this.classList.add('is-checked');
+        }
+      });
+    });
   }
 
   function validateForm(formEl) {
@@ -209,11 +227,9 @@ const AppForms = (() => {
       }
     });
     for (const [name, cbs] of Object.entries(cbGroups)) {
-      // If it's a single checkbox (like Acknowledgment), require it
       if (cbs.length === 1) {
         if (!cbs[0].checked) { setFieldError(cbs[0], 'You must acknowledge this to continue.'); valid = false; }
       } else {
-        // If it's a group, require at least one
         if (!cbs.some(cb => cb.checked)) {
           setFieldError(cbs[0], 'Please select at least one option.');
           valid = false;
@@ -260,6 +276,7 @@ const AppForms = (() => {
     form.reset();
     form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     form.querySelectorAll('.field-error-msg').forEach(el => el.classList.remove('visible'));
+    form.querySelectorAll('.is-checked').forEach(el => el.classList.remove('is-checked')); // Clear radio states
     form.querySelectorAll('[data-conditional]').forEach(el => el.style.display = 'none');
     // Re-render location pickers to their empty state
     form.querySelectorAll('[id$="-location-picker"]').forEach(el => el._ranked && (el._ranked = []) && el._addSite && buildLocationPicker(el.id, el._sites));
@@ -272,6 +289,7 @@ const AppForms = (() => {
 
     buildLocationPicker('ce-location-picker', SITES_ESY);
     attachLiveValidation(form);
+    attachRadioDeselect(form); // Add radio unselect functionality
 
     const esyPrevYearsCheckboxes = form.querySelectorAll('input[name="Previous ESY Years"]');
     const esyNoneCheckbox = form.querySelector('input[name="Previous ESY Years"][value="None"]');
@@ -332,6 +350,7 @@ const AppForms = (() => {
 
     buildLocationPicker('cs-location-picker', SITES_SS);
     attachLiveValidation(form);
+    attachRadioDeselect(form); // Add radio unselect functionality
 
     const ssPrevYearsCheckboxes = form.querySelectorAll('input[name="Previous Summer School Years"]');
     const ssNoneCheckbox = form.querySelector('input[name="Previous Summer School Years"][value="None"]');
@@ -392,6 +411,7 @@ const AppForms = (() => {
 
     buildLocationPicker('cl-location-picker', SITES_ESY);
     attachLiveValidation(form);
+    attachRadioDeselect(form); // Add radio unselect functionality
 
     form.addEventListener('submit', e => {
       e.preventDefault();
