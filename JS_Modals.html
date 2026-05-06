@@ -1,0 +1,54 @@
+<script>
+/* ============================================================
+   JS_Modals.html — Success / Error modal open & close
+============================================================ */
+
+const AppModals = (() => {
+
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => modal.querySelector('.modal-close-btn')?.focus(), 50);
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  function showSuccess(title, message) {
+    if (title)   document.getElementById('successTitle').textContent = title;
+    if (message) document.getElementById('successMsg').textContent   = message;
+    openModal('successModal');
+  }
+
+  function showError(title, message) {
+    if (title)   document.getElementById('errorTitle').textContent = title;
+    if (message) document.getElementById('errorMsg').textContent   = message;
+    openModal('errorModal');
+  }
+
+  function closeSuccess() { closeModal('successModal'); }
+  function closeError()   { closeModal('errorModal');   }
+
+  // Click backdrop to close
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('modal-backdrop') && e.target.classList.contains('visible')) {
+      e.target.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Escape to close
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeSuccess(); closeError(); }
+  });
+
+  return { showSuccess, showError, closeSuccess, closeError };
+
+})();
+</script>
