@@ -1,0 +1,66 @@
+<script>
+/* ============================================================
+   JS_Nav.html — Tab switching, active states, mobile sidebar
+============================================================ */
+
+const AppNav = (() => {
+
+  const TAB_TITLES = {
+    'home':      'Program Information',
+    'cert-esy':  'Certificated ESY',
+    'cert-ss':   'Certificated Summer School',
+    'class-esy': 'Classified ESY',
+    'admin':     'Admin Panel'
+  };
+
+  function switchTab(tabId) {
+    // Hide all panels
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+    // Deactivate all nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+      item.setAttribute('aria-current', 'false');
+    });
+
+    // Show target
+    const target = document.getElementById('tab-' + tabId);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    // Activate nav item
+    const navItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+    if (navItem) {
+      navItem.classList.add('active');
+      navItem.setAttribute('aria-current', 'page');
+    }
+
+    // Update mobile header
+    const mobileTitle = document.getElementById('mobileTitle');
+    if (mobileTitle) mobileTitle.textContent = TAB_TITLES[tabId] || '';
+
+    closeMobileSidebar();
+  }
+
+  function openMobileSidebar() {
+    document.getElementById('sidebar')?.classList.add('open');
+    document.getElementById('sidebarOverlay')?.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileSidebar() {
+    document.getElementById('sidebar')?.classList.remove('open');
+    document.getElementById('sidebarOverlay')?.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMobileSidebar();
+  });
+
+  return { switchTab, openMobileSidebar, closeMobileSidebar };
+
+})();
+</script>
