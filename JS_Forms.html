@@ -38,7 +38,6 @@ const AppForms = (() => {
 
       container.innerHTML = `
         <div class="location-picker">
-          <!-- Left: available -->
           <div class="picker-panel">
             <div class="picker-panel-header">
               Available Sites
@@ -55,7 +54,6 @@ const AppForms = (() => {
               }
             </div>
           </div>
-          <!-- Right: ranked -->
           <div class="picker-panel">
             <div class="picker-panel-header">
               Your Preference Order
@@ -135,8 +133,12 @@ const AppForms = (() => {
     formEl.querySelectorAll('[name]').forEach(el => {
       if (!el.name) return;
       if (el.type === 'checkbox') {
-        if (el.checked) data[el.name] = el.value;
-        else if (!(el.name in data)) data[el.name] = '';
+        if (el.checked) {
+          if (data[el.name]) data[el.name] += ', ' + el.value;
+          else data[el.name] = el.value;
+        } else if (!(el.name in data)) {
+          data[el.name] = '';
+        }
       } else if (el.type === 'radio') {
         if (el.checked) data[el.name] = el.value;
         else if (!(el.name in data)) data[el.name] = '';
@@ -197,9 +199,27 @@ const AppForms = (() => {
     }
 
     // Required checkboxes
+    const cbGroups = {};
     formEl.querySelectorAll('input[type="checkbox"][required]').forEach(cb => {
-      if (!cb.checked) { setFieldError(cb, 'You must acknowledge this to continue.'); valid = false; }
+      if (cb.name) {
+        cbGroups[cb.name] = cbGroups[cb.name] || [];
+        cbGroups[cb.name].push(cb);
+      } else {
+        if (!cb.checked) { setFieldError(cb, 'This field is required.'); valid = false; }
+      }
     });
+    for (const [name, cbs] of Object.entries(cbGroups)) {
+      // If it's a single checkbox (like Acknowledgment), require it
+      if (cbs.length === 1) {
+        if (!cbs[0].checked) { setFieldError(cbs[0], 'You must acknowledge this to continue.'); valid = false; }
+      } else {
+        // If it's a group, require at least one
+        if (!cbs.some(cb => cb.checked)) {
+          setFieldError(cbs[0], 'Please select at least one option.');
+          valid = false;
+        }
+      }
+    }
 
     if (!valid) {
       const first = formEl.querySelector('.error');
@@ -252,7 +272,27 @@ const AppForms = (() => {
 
     buildLocationPicker('ce-location-picker', SITES_ESY);
     attachLiveValidation(form);
-    attachConditional(form, 'Taught ESY 24/25', 'Yes', 'ce-prev-location-group');
+
+    const esyPrevYearsCheckboxes = form.querySelectorAll('input[name="Previous ESY Years"]');
+    const esyNoneCheckbox = form.querySelector('input[name="Previous ESY Years"][value="None"]');
+    const esyPrevLocGroup = document.getElementById('ce-prev-location-group');
+    
+    esyPrevYearsCheckboxes.forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        if (e.target === esyNoneCheckbox && esyNoneCheckbox.checked) {
+          esyPrevYearsCheckboxes.forEach(c => { if (c !== esyNoneCheckbox) c.checked = false; });
+        } else if (e.target.checked && esyNoneCheckbox) {
+          esyNoneCheckbox.checked = false;
+        }
+        
+        const hasYear = Array.from(esyPrevYearsCheckboxes).some(c => c !== esyNoneCheckbox && c.checked);
+        if (esyPrevLocGroup) {
+          esyPrevLocGroup.style.display = hasYear ? '' : 'none';
+          if (!hasYear) esyPrevLocGroup.querySelectorAll('input').forEach(i => i.value = '');
+        }
+        clearFieldError(esyPrevYearsCheckboxes[0]);
+      });
+    });
 
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -292,7 +332,27 @@ const AppForms = (() => {
 
     buildLocationPicker('cs-location-picker', SITES_SS);
     attachLiveValidation(form);
-    attachConditional(form, 'Taught Summer School 24/25', 'Yes', 'cs-prev-location-group');
+
+    const ssPrevYearsCheckboxes = form.querySelectorAll('input[name="Previous Summer School Years"]');
+    const ssNoneCheckbox = form.querySelector('input[name="Previous Summer School Years"][value="None"]');
+    const ssPrevLocGroup = document.getElementById('cs-prev-location-group');
+    
+    ssPrevYearsCheckboxes.forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        if (e.target === ssNoneCheckbox && ssNoneCheckbox.checked) {
+          ssPrevYearsCheckboxes.forEach(c => { if (c !== ssNoneCheckbox) c.checked = false; });
+        } else if (e.target.checked && ssNoneCheckbox) {
+          ssNoneCheckbox.checked = false;
+        }
+        
+        const hasYear = Array.from(ssPrevYearsCheckboxes).some(c => c !== ssNoneCheckbox && c.checked);
+        if (ssPrevLocGroup) {
+          ssPrevLocGroup.style.display = hasYear ? '' : 'none';
+          if (!hasYear) ssPrevLocGroup.querySelectorAll('input').forEach(i => i.value = '');
+        }
+        clearFieldError(ssPrevYearsCheckboxes[0]);
+      });
+    });
 
     form.addEventListener('submit', e => {
       e.preventDefault();
