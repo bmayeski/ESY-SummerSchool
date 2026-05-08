@@ -88,10 +88,10 @@ const HEADERS = {
     'Timestamp',
     'Full Name',
     'Employee ID',
-    'Job Title',
-    'Current School/Site',
     'Phone',
     'Email',
+    'Current School/Site',
+    'Job Title',
     '25/26 Position(s)',
     'Session Availability',           // e.g. "Session 1"
     'Location Preference (Ranked)',
@@ -265,7 +265,6 @@ function getAdminInfo() {
 // matching rows in the Admin Info sheet.
 function saveAdminInfo(updates) {
   try {
-    // Re-verify admin server-side before writing
     const email   = Session.getActiveUser().getEmail().toLowerCase();
     const isAdmin = ADMIN_EMAILS.map(a => a.toLowerCase()).includes(email);
     if (!isAdmin) return { success: false, error: 'Access denied.' };
@@ -275,13 +274,23 @@ function saveAdminInfo(updates) {
     const rows  = sheet.getDataRange().getValues();
 
     let saved = 0;
+    
+    // Create a copy of updates so we can delete keys as we find them
+    const remainingUpdates = { ...updates };
 
     for (let i = 1; i < rows.length; i++) {
       const key = String(rows[i][0]).trim();
-      if (key && updates.hasOwnProperty(key)) {
-        sheet.getRange(i + 1, 2).setValue(updates[key]);
+      if (key && remainingUpdates.hasOwnProperty(key)) {
+        sheet.getRange(i + 1, 2).setValue(remainingUpdates[key]);
+        delete remainingUpdates[key]; // Mark as updated
         saved++;
       }
+    }
+    
+    // Append any new fields that don't exist in the sheet yet
+    for (const [key, val] of Object.entries(remainingUpdates)) {
+      sheet.appendRow([key, val, '']);
+      saved++;
     }
 
     SpreadsheetApp.flush();
