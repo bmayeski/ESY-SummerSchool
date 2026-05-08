@@ -39,6 +39,13 @@
       </svg>
       <span>Program Information</span>
     </button>
+    
+    <button class="nav-item" data-tab="procedures" onclick="AppNav.switchTab('procedures')">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+      </svg>
+      <span>Procedure Guide</span>
+    </button>
 
     <div class="nav-section-label">Applications</div>
     <button class="nav-item" data-tab="cert-esy" onclick="AppNav.switchTab('cert-esy')">
@@ -96,6 +103,7 @@
   </header>
 
 
+  <!-- ==================== HOME TAB ==================== -->
   <section class="tab-panel active" id="tab-home" role="tabpanel">
 
     <div class="page-header">
@@ -141,15 +149,19 @@
         </div>
         <div class="shared-schedule-body">
           <div class="schedule-cell">
-            <span class="schedule-cell-label">Program Dates</span>
-            <span class="schedule-cell-value" id="sharedDates">6/8/26 – 6/26/26 (no school 6/19)</span>
+            <span class="schedule-cell-label">Term 1 Dates</span>
+            <span class="schedule-cell-value" id="sharedDates">6/8/26 – 6/26/26</span>
           </div>
           <div class="schedule-cell">
-            <span class="schedule-cell-label">Session I Hours</span>
+            <span class="schedule-cell-label">Term 2 Dates</span>
+            <span class="schedule-cell-value" id="sharedDates2">N/A</span>
+          </div>
+          <div class="schedule-cell">
+            <span class="schedule-cell-label">Morning Hours</span>
             <span class="schedule-cell-value" id="sharedSessionI">8:00 am – 11:00 am</span>
           </div>
           <div class="schedule-cell">
-            <span class="schedule-cell-label">Session II Hours</span>
+            <span class="schedule-cell-label">Afternoon Hours</span>
             <span class="schedule-cell-value" id="sharedSessionII">11:45 am – 2:45 pm</span>
           </div>
         </div>
@@ -158,8 +170,9 @@
       <div class="section-heading">Site-Specific Schedules</div>
       <div class="site-cards">
 
+        <!-- ELITE ACADEMY -->
         <div class="site-card">
-          <div class="site-card-header esy-hdr">
+          <div class="site-card-header site-elite-hdr">
             <div class="site-card-icon">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
             </div>
@@ -169,19 +182,22 @@
             </div>
           </div>
           <div class="site-card-body">
-            <div class="info-row"><span class="info-label">Session I Dates</span><span class="info-value" id="eliteSessIDates">6/8/26 – 6/26/26</span></div>
-            <div class="info-row"><span class="info-label">Session II Dates</span><span class="info-value" id="eliteSessIIDates">6/29/26 – 7/17/26</span></div>
-            <div class="info-row"><span class="info-label">Hours</span><span class="info-value" id="eliteHours">9:30 am – 1:30 pm</span></div>
+            <div class="info-row"><span class="info-label">Term 1 Dates</span><span class="info-value" id="eliteSessIDates">6/8/26 – 6/26/26</span></div>
+            <div class="info-row"><span class="info-label">Term 2 Dates</span><span class="info-value" id="eliteSessIIDates">6/29/26 – 7/17/26</span></div>
+            <div class="info-row"><span class="info-label">Morning Hours</span><span class="info-value" id="eliteHours">9:30 am – 1:30 pm</span></div>
+            <div class="info-row"><span class="info-label">Afternoon Hours</span><span class="info-value" id="eliteHours2">N/A</span></div>
             <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="eliteNoSchool">6/19 or 7/3</span></div>
           </div>
           <div class="site-card-actions">
+            <!-- Updated button weights -->
             <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY Application</button>
-            <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('class-esy')">Classified ESY Application</button>
+            <button class="btn btn-tertiary btn-full btn-sm" onclick="AppNav.switchTab('class-esy')">Classified ESY Application</button>
           </div>
         </div>
 
+        <!-- HELIX CHARTER -->
         <div class="site-card">
-          <div class="site-card-header both-hdr">
+          <div class="site-card-header site-helix-hdr">
             <div class="site-card-icon">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
             </div>
@@ -191,19 +207,23 @@
             </div>
           </div>
           <div class="site-card-body">
-            <div class="info-row"><span class="info-label">Dates</span><span class="info-value" id="helixDates">6/10/26 – 7/1/26</span></div>
-            <div class="info-row"><span class="info-label">Session I Hours</span><span class="info-value" id="helixSessIHours">8:00 – 11:15 am</span></div>
-            <div class="info-row"><span class="info-label">Session II Hours</span><span class="info-value" id="helixSessIIHours">11:45 am – 3:00 pm</span></div>
+            <div class="info-row"><span class="info-label">Term 1 Dates</span><span class="info-value" id="helixDates">6/10/26 – 7/1/26</span></div>
+            <div class="info-row"><span class="info-label">Term 2 Dates</span><span class="info-value" id="helixDates2">N/A</span></div>
+            <div class="info-row"><span class="info-label">Morning Hours</span><span class="info-value" id="helixSessIHours">8:00 – 11:15 am</span></div>
+            <div class="info-row"><span class="info-label">Afternoon Hours</span><span class="info-value" id="helixSessIIHours">11:45 am – 3:00 pm</span></div>
             <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="helixNoSchool">6/19</span></div>
           </div>
           <div class="site-card-actions">
-            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY</button>
+            <!-- Updated button weights -->
+            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY Application</button>
             <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('cert-ss')">Certificated Summer School</button>
+            <button class="btn btn-tertiary btn-full btn-sm" onclick="AppNav.switchTab('class-esy')">Classified ESY Application</button>
           </div>
         </div>
 
+        <!-- STEELE CANYON -->
         <div class="site-card">
-          <div class="site-card-header both-hdr">
+          <div class="site-card-header site-steele-hdr">
             <div class="site-card-icon">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
             </div>
@@ -213,17 +233,23 @@
             </div>
           </div>
           <div class="site-card-body">
-            <div class="info-row"><span class="info-label">Dates</span><span class="info-value" id="steeleDates">6/8/26 – 6/26/26</span></div>
-            <div class="info-row"><span class="info-label">Session I Hours</span><span class="info-value" id="steeleSessIHours">8:00 am – 12:45 pm</span></div>
+            <div class="info-row"><span class="info-label">Term 1 Dates</span><span class="info-value" id="steeleDates">6/8/26 – 6/26/26</span></div>
+            <div class="info-row"><span class="info-label">Term 2 Dates</span><span class="info-value" id="steeleDates2">N/A</span></div>
+            <div class="info-row"><span class="info-label">Morning Hours</span><span class="info-value" id="steeleSessIHours">8:00 am – 12:45 pm</span></div>
+            <div class="info-row"><span class="info-label">Afternoon Hours</span><span class="info-value" id="steeleSessIIHours">N/A</span></div>
             <div class="info-row"><span class="info-label">No School</span><span class="info-value" id="steeleNoSchool">6/19</span></div>
           </div>
           <div class="site-card-actions">
-            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY</button>
+            <!-- Updated button weights -->
+            <button class="btn btn-primary btn-full btn-sm" onclick="AppNav.switchTab('cert-esy')">Certificated ESY Application</button>
             <button class="btn btn-secondary btn-full btn-sm" onclick="AppNav.switchTab('cert-ss')">Certificated Summer School</button>
+            <button class="btn btn-tertiary btn-full btn-sm" onclick="AppNav.switchTab('class-esy')">Classified ESY Application</button>
           </div>
         </div>
 
-      </div><div class="section-heading">Contact &amp; Additional Information</div>
+      </div>
+      
+      <div class="section-heading">Contact &amp; Additional Information</div>
       <div class="contact-card">
         <div class="contact-card-header"><h3>Questions? Contact the Special Education Department</h3></div>
         <div class="contact-card-body">
@@ -243,9 +269,63 @@
         </div>
       </div>
 
-    </div></section>
+    </div>
+  </section>
 
 
+  <!-- ==================== PROCEDURES TAB ==================== -->
+  <section class="tab-panel" id="tab-procedures" role="tabpanel">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <div class="page-title-group">
+          <span class="breadcrumb">Overview</span>
+          <h1 class="page-title">Procedure Guide</h1>
+          <p class="page-subtitle">ESY 2026 guidelines for Case Managers and Staff</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      
+      <details class="procedure-accordion" open>
+        <summary>Enrollment</summary>
+        <div class="accordion-content">
+          <div class="alert-box alert-warning" id="procEnrollmentAlert" style="margin-bottom: var(--sp-4);">
+            <strong>Deadline Passed:</strong> If ESY enrollment needs change after April 3, please use the transportation request form.
+          </div>
+          <p id="procEnrollmentText">Loading procedures...</p>
+        </div>
+      </details>
+
+      <details class="procedure-accordion">
+        <summary>Transportation</summary>
+        <div class="accordion-content">
+          <div class="alert-box alert-warning" id="procTransportAlert" style="margin-bottom: var(--sp-4);">
+            <strong>Deadline Passed:</strong> Starting March 15, transportation will attempt to contact unconfirmed families.
+          </div>
+          <p id="procTransportText">Loading procedures...</p>
+        </div>
+      </details>
+
+      <details class="procedure-accordion">
+        <summary>Parent Communication</summary>
+        <div class="accordion-content">
+          <p id="procParentText">Loading procedures...</p>
+        </div>
+      </details>
+
+      <details class="procedure-accordion">
+        <summary>Credit Recovery</summary>
+        <div class="accordion-content">
+          <p id="procCreditRecText">Loading procedures...</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+
+  <!-- ==================== CERTIFICATED ESY ==================== -->
   <section class="tab-panel" id="tab-cert-esy" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -331,9 +411,9 @@
               <label class="field-label">Which of the previous two years did you teach ESY? <span class="required">*</span></label>
               <p class="session-check-hint">Select all that apply.</p>
               <div class="session-check-group" id="ce-prev-years-group">
-                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="23/24"><span>23/24</span></label>
-                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="24/25"><span>24/25</span></label>
-                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="None"><span>None</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="23/24" required><span>23/24</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="24/25" required><span>24/25</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous ESY Years" value="None" required><span>None</span></label>
               </div>
             </div>
             <div class="field-group" id="ce-prev-location-group" style="display:none;">
@@ -394,6 +474,7 @@
   </section>
 
 
+  <!-- ==================== CERTIFICATED SUMMER SCHOOL ==================== -->
   <section class="tab-panel" id="tab-cert-ss" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -475,9 +556,9 @@
               <label class="field-label">Which of the previous two years did you teach Summer School? <span class="required">*</span></label>
               <p class="session-check-hint">Select all that apply.</p>
               <div class="session-check-group" id="cs-prev-years-group">
-                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="23/24"><span>23/24</span></label>
-                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="24/25"><span>24/25</span></label>
-                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="None"><span>None</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="23/24" required><span>23/24</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="24/25" required><span>24/25</span></label>
+                <label class="session-check-option"><input type="checkbox" name="Previous Summer School Years" value="None" required><span>None</span></label>
               </div>
             </div>
             <div class="field-group" id="cs-prev-location-group" style="display:none;">
@@ -538,6 +619,7 @@
   </section>
 
 
+  <!-- ==================== CLASSIFIED ESY ==================== -->
   <section class="tab-panel" id="tab-class-esy" role="tabpanel">
     <div class="page-header">
       <div class="page-header-inner">
@@ -570,20 +652,20 @@
               <input class="field-input" type="text" id="cl-empid" name="Employee ID" required placeholder="e.g. 12345">
             </div>
             <div class="field-group">
-              <label class="field-label" for="cl-jobtitle">Job Title <span class="required">*</span></label>
-              <input class="field-input" type="text" id="cl-jobtitle" name="Job Title" required placeholder="e.g. Special Ed Aide M/M">
-            </div>
-            <div class="field-group">
-              <label class="field-label" for="cl-site">Current Site <span class="required">*</span></label>
-              <input class="field-input" type="text" id="cl-site" name="Current School/Site" required placeholder="e.g. Grossmont High School">
-            </div>
-            <div class="field-group">
               <label class="field-label" for="cl-phone">Phone Number <span class="required">*</span></label>
               <input class="field-input" type="tel" id="cl-phone" name="Phone" required placeholder="(619) 555-5555">
             </div>
             <div class="field-group">
               <label class="field-label" for="cl-email">Email Address <span class="required">*</span></label>
               <input class="field-input" type="email" id="cl-email" name="Email" required placeholder="you@guhsd.net">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-site">Current Site <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-site" name="Current School/Site" required placeholder="e.g. Grossmont High School">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="cl-jobtitle">Job Title <span class="required">*</span></label>
+              <input class="field-input" type="text" id="cl-jobtitle" name="Job Title" required placeholder="e.g. Special Ed Aide M/M">
             </div>
           </div>
         </div>
@@ -652,6 +734,7 @@
   </section>
 
 
+  <!-- ==================== ADMIN PANEL ==================== -->
   <?if (isAdmin) {?>
   <section class="tab-panel" id="tab-admin" role="tabpanel">
     <div class="page-header">
@@ -703,6 +786,41 @@
         </div>
       </div>
 
+      <!-- NEW PROCEDURE GUIDE ADMIN SECTION -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          <div class="admin-section-icon" style="background:var(--color-primary);">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Procedure Guide Content</h3>
+            <p>Update the text shown in the Procedures tab. Use plain text; paragraph breaks will be saved automatically.</p>
+          </div>
+        </div>
+        <div class="admin-section-body">
+          <div class="admin-grid admin-grid--1">
+            <div class="admin-field">
+              <label class="admin-label" for="admin-procEnrollment">Enrollment Procedures</label>
+              <textarea class="field-textarea" id="admin-procEnrollment" rows="4"></textarea>
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-procTransport">Transportation Procedures</label>
+              <textarea class="field-textarea" id="admin-procTransport" rows="4"></textarea>
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-procParentText">Parent Communication</label>
+              <textarea class="field-textarea" id="admin-procParentText" rows="4"></textarea>
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-procCreditRecText">Credit Recovery</label>
+              <textarea class="field-textarea" id="admin-procCreditRecText" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon">
@@ -716,15 +834,19 @@
         <div class="admin-section-body">
           <div class="admin-grid">
             <div class="admin-field">
-              <label class="admin-label" for="admin-sharedDates">Program Dates</label>
-              <input class="field-input" type="text" id="admin-sharedDates" placeholder="e.g. 6/8/26 – 6/26/26 (no school 6/19)">
+              <label class="admin-label" for="admin-sharedDates">Term 1 Dates</label>
+              <input class="field-input" type="text" id="admin-sharedDates" placeholder="e.g. 6/8/26 – 6/26/26">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-sharedSessionI">Session I Hours</label>
+              <label class="admin-label" for="admin-sharedDates2">Term 2 Dates</label>
+              <input class="field-input" type="text" id="admin-sharedDates2" placeholder="e.g. 6/29/26 – 7/17/26">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-sharedSessionI">Morning Hours</label>
               <input class="field-input" type="text" id="admin-sharedSessionI" placeholder="e.g. 8:00 am – 11:00 am">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-sharedSessionII">Session II Hours</label>
+              <label class="admin-label" for="admin-sharedSessionII">Afternoon Hours</label>
               <input class="field-input" type="text" id="admin-sharedSessionII" placeholder="e.g. 11:45 am – 2:45 pm">
             </div>
           </div>
@@ -741,16 +863,20 @@
         <div class="admin-section-body">
           <div class="admin-grid">
             <div class="admin-field">
-              <label class="admin-label" for="admin-eliteSessIDates">Session I Dates</label>
+              <label class="admin-label" for="admin-eliteSessIDates">Term 1 Dates</label>
               <input class="field-input" type="text" id="admin-eliteSessIDates" placeholder="e.g. 6/8/26 – 6/26/26">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-eliteSessIIDates">Session II Dates</label>
+              <label class="admin-label" for="admin-eliteSessIIDates">Term 2 Dates</label>
               <input class="field-input" type="text" id="admin-eliteSessIIDates" placeholder="e.g. 6/29/26 – 7/17/26">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-eliteHours">Daily Hours</label>
+              <label class="admin-label" for="admin-eliteHours">Morning Hours</label>
               <input class="field-input" type="text" id="admin-eliteHours" placeholder="e.g. 9:30 am – 1:30 pm">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-eliteHours2">Afternoon Hours</label>
+              <input class="field-input" type="text" id="admin-eliteHours2" placeholder="e.g. N/A">
             </div>
             <div class="admin-field">
               <label class="admin-label" for="admin-eliteNoSchool">No School Note</label>
@@ -763,22 +889,26 @@
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon" style="background:var(--color-primary-light);">
-            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
           </div>
           <div><h3>Helix Charter</h3><p>ESY and Summer School Credit Recovery.</p></div>
         </div>
         <div class="admin-section-body">
           <div class="admin-grid">
             <div class="admin-field">
-              <label class="admin-label" for="admin-helixDates">Dates</label>
+              <label class="admin-label" for="admin-helixDates">Term 1 Dates</label>
               <input class="field-input" type="text" id="admin-helixDates" placeholder="e.g. 6/10/26 – 7/1/26">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-helixSessIHours">Session I Hours</label>
+              <label class="admin-label" for="admin-helixDates2">Term 2 Dates</label>
+              <input class="field-input" type="text" id="admin-helixDates2" placeholder="e.g. N/A">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-helixSessIHours">Morning Hours</label>
               <input class="field-input" type="text" id="admin-helixSessIHours" placeholder="e.g. 8:00 – 11:15 am">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-helixSessIIHours">Session II Hours</label>
+              <label class="admin-label" for="admin-helixSessIIHours">Afternoon Hours</label>
               <input class="field-input" type="text" id="admin-helixSessIIHours" placeholder="e.g. 11:45 am – 3:00 pm">
             </div>
             <div class="admin-field">
@@ -792,19 +922,27 @@
       <div class="admin-section">
         <div class="admin-section-header">
           <div class="admin-section-icon" style="background:var(--color-primary-light);">
-            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/></svg>
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/></svg>
           </div>
           <div><h3>Steele Canyon</h3><p>ESY and Summer School Credit Recovery.</p></div>
         </div>
         <div class="admin-section-body">
           <div class="admin-grid">
             <div class="admin-field">
-              <label class="admin-label" for="admin-steeleDates">Dates</label>
+              <label class="admin-label" for="admin-steeleDates">Term 1 Dates</label>
               <input class="field-input" type="text" id="admin-steeleDates" placeholder="e.g. 6/8/26 – 6/26/26">
             </div>
             <div class="admin-field">
-              <label class="admin-label" for="admin-steeleSessIHours">Session I Hours</label>
+              <label class="admin-label" for="admin-steeleDates2">Term 2 Dates</label>
+              <input class="field-input" type="text" id="admin-steeleDates2" placeholder="e.g. N/A">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-steeleSessIHours">Morning Hours</label>
               <input class="field-input" type="text" id="admin-steeleSessIHours" placeholder="e.g. 8:00 am – 12:45 pm">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label" for="admin-steeleSessIIHours">Afternoon Hours</label>
+              <input class="field-input" type="text" id="admin-steeleSessIIHours" placeholder="e.g. N/A">
             </div>
             <div class="admin-field">
               <label class="admin-label" for="admin-steeleNoSchool">No School Note</label>
@@ -844,7 +982,9 @@
         </div>
       </div>
 
-    </div><div class="admin-save-bar">
+    </div>
+    
+    <div class="admin-save-bar">
       <span class="admin-save-status" id="adminSaveStatus"></span>
       <button class="btn-admin-save" id="adminSaveBtn" onclick="AppAdmin.save()">
         <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
@@ -857,7 +997,9 @@
   </section>
   <?}?>
 
-</main><div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+</main>
+
+<div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
   <div class="modal">
     <div class="modal-icon modal-icon--success">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
