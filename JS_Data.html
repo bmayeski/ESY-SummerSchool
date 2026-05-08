@@ -1,32 +1,31 @@
 <script>
-/* ============================================================
-   JS_Data.html — Fetches Admin Info sheet values and
-   populates the Program Information home tab
-============================================================ */
-
 const AppData = (() => {
 
-  // Maps spreadsheet keys → element IDs on the home tab
   const FIELD_MAP = {
     announcementMsg:    'announcementMsg',
     applicationDeadline:'deadlineDate',
     // Shared schedule
     sharedDates:        'sharedDates',
+    sharedDates2:       'sharedDates2',
     sharedSessionI:     'sharedSessionI',
     sharedSessionII:    'sharedSessionII',
     // ELITE
     eliteSessIDates:    'eliteSessIDates',
     eliteSessIIDates:   'eliteSessIIDates',
     eliteHours:         'eliteHours',
+    eliteHours2:        'eliteHours2',
     eliteNoSchool:      'eliteNoSchool',
     // Helix
     helixDates:         'helixDates',
+    helixDates2:        'helixDates2',
     helixSessIHours:    'helixSessIHours',
     helixSessIIHours:   'helixSessIIHours',
     helixNoSchool:      'helixNoSchool',
     // Steele
     steeleDates:        'steeleDates',
+    steeleDates2:       'steeleDates2',
     steeleSessIHours:   'steeleSessIHours',
+    steeleSessIIHours:  'steeleSessIIHours',
     steeleNoSchool:     'steeleNoSchool',
     // Contact
     contactName:        'contactName',
@@ -37,73 +36,53 @@ const AppData = (() => {
 
   function setText(id, value) {
     const el = document.getElementById(id);
-    if (el && value !== undefined) el.textContent = value;
+    if (!el) return;
+    
+    // Check if value is a date, format it
+    if (id === 'deadlineDate' && value !== undefined) {
+      const dateObj = new Date(value);
+      if (!isNaN(dateObj)) {
+        value = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      }
+    }
+    
+    // Automatically apply N/A styling if field is blank
+    if (value === undefined || value === null || String(value).trim() === '') {
+      el.textContent = 'N/A';
+      el.style.color = 'var(--color-text-muted)';
+      el.style.fontStyle = 'italic';
+      el.style.fontWeight = '500';
+    } else {
+      el.textContent = value;
+      el.style.color = ''; // Reset CSS
+      el.style.fontStyle = ''; 
+      el.style.fontWeight = '';
+    }
   }
 
   function populatePage(data) {
     for (const [key, elId] of Object.entries(FIELD_MAP)) {
-      if (data[key] !== undefined) {
-        let value = data[key];
-        
-        if (key === 'applicationDeadline') {
-          const dateObj = new Date(value);
-          if (!isNaN(dateObj)) {
-            value = dateObj.toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            });
-          }
-        }
-        
-        setText(elId, value);
-      }
+      setText(elId, data[key]);
     }
   }
 
-  function hideLoading() {
-    document.getElementById('loadingOverlay')?.classList.add('hidden');
-  }
-
+  function hideLoading() { document.getElementById('loadingOverlay')?.classList.add('hidden'); }
   function showLoadError() {
     const el = document.getElementById('loadingOverlay');
-    if (el) {
-      el.innerHTML = `
-        <div style="text-align:center;color:var(--color-text-muted);">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               style="margin:0 auto var(--sp-3);display:block;opacity:0.5;">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <p style="font-size:0.875rem;">Could not load program info.<br>Please refresh or contact HR.</p>
-        </div>`;
-    }
+    if (el) el.innerHTML = `<div style="text-align:center;color:var(--color-text-muted);"><p>Could not load program info.<br>Please refresh or contact HR.</p></div>`;
   }
 
   function init() {
     google.script.run
       .withSuccessHandler(result => {
         hideLoading();
-        if (result && result.success) {
-          populatePage(result.data);
-        } else {
-          showLoadError();
-        }
-      })
-      .withFailureHandler(() => {
-        hideLoading();
-        showLoadError();
-      })
-      .getAdminInfo();
+        if (result && result.success) populatePage(result.data);
+        else showLoadError();
+      }).withFailureHandler(() => { hideLoading(); showLoadError(); }).getAdminInfo();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 
   return { init };
 
