@@ -1,0 +1,224 @@
+<script>
+/* ============================================================
+   JS_Review.html — Fetches applications, renders the admin
+   dashboard table, and handles approval/assignment logic.
+============================================================ */
+
+const AppReview = (() => {
+  let currentApps = [];
+  let currentFilter = 'Pending';
+  let currentSheet = 'Certificated ESY';
+
+  // Helper arrays for the assignment dropdowns
+  const SITES = ['Grossmont', 'El Cajon', 'Mt. Miguel', 'El Capitan', 'Granite Hills', 'Monte Vista', 'Santana', 'Valhalla', 'West Hills', 'Chap / IDEA', 'ELITE', 'MERIT', 'Helix', 'Steele Canyon'];
+  const SESSIONS = ['Session 1', 'Session 2', 'Both Sessions'];
+  const POSITIONS = ['Educational Specialist', 'SPED Teacher', 'Special Ed Aide M/M', 'Behavior Intervention Assistant', 'Special Ed Aide M/S', 'COTA', 'SLPA', 'LVN'];
+
+  // Dynamically builds the assignment pop-up modal
+  function buildReviewModal() {
+    if (document.getElementById('reviewActionModal')) return;
+    const modalHTML = `
+      <div class="modal-backdrop" id="reviewActionModal" style="display:none; z-index: 9999;">
+        <div class="modal" style="max-width: 500px; width: 100%; text-align: left; padding: var(--sp-6);">
+          <h2 class="modal-title" style="margin-bottom: 5px; font-size: 1.25rem;">Review Application</h2>
+          <p id="reviewModalApplicant" style="color: var(--color-text-sub); margin-bottom: 20px; font-weight: 600;"></p>
+          
+          <div class="admin-field" style="margin-bottom: 15px;">
+            <label class="admin-label">Approval Status</label>
+            <select id="reviewStatus" class="field-input" style="padding: 8px;">
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Denied">Denied</option>
+            </select>
+          </div>
+
+          <div class="admin-field" style="margin-bottom: 15px;">
+            <label class="admin-label">Assigned Site</label>
+            <select id="reviewSite" class="field-input" style="padding: 8px;">
+              <option value="">-- Unassigned --</option>
+              ${SITES.map(s => `<option value="${s}">${s}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="admin-field" style="margin-bottom: 15px;">
+            <label class="admin-label">Assigned Position</label>
+            <select id="reviewPosition" class="field-input" style="padding: 8px;">
+              <option value="">-- Unassigned --</option>
+              ${POSITIONS.map(p => `<option value="${p}">${p}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="admin-field" style="margin-bottom: 25px;">
+            <label class="admin-label">Assigned Session</label>
+            <select id="reviewSession" class="field-input" style="padding: 8px;">
+              <option value="">-- Unassigned --</option>
+              ${SESSIONS.map(s => `<option value="${s}">${s}</option>`).join('')}
+            </select>
+          </div>
+
+          <input type="hidden" id="reviewRowIndex">
+          
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="btn btn-ghost" onclick="AppReview.closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="saveReviewBtn" onclick="AppReview.saveDecision()">Save Decision</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  }
+
+  function loadApplications() {
+    const sheetSelect = document.getElementById('reviewSheetSelect');
+    if (sheetSelect) currentSheet = sheetSelect.value;
+    
+    const tbody = document.getElementById('appTableBody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; text-align: center; color: var(--color-text-muted);">Loading applications from ${currentSheet}...</td></tr>`;
+
+    google.script.run
+      .withSuccessHandler(res => {
+        if (res && res.success) {
+          currentApps = res.data;
+          renderTable();
+        } else {
+          tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; text-align: center; color: var(--color-accent-esy);">Error loading data. Access denied or sheet missing.</td></tr>`;
+        }
+      })
+      .withFailureHandler(() => {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; text-align: center; color: var(--color-accent-esy);">Server Error fetching applications.</td></tr>`;
+      })
+      .getApplications(currentSheet);
+  }
+
+  function filterApps(status) {
+    currentFilter = status;
+    
+    // Update button styling visually to show active tab
+    ['Pending', 'Approved', 'Denied'].forEach(s => {
+      const btn = document.getElementById(`btnFilter${s}`);
+      if (btn) {
+        if (s === status) {
+          btn.classList.remove('btn-secondary', 'btn-tertiary');
+          btn.classList.add('btn-primary');
+        } else {
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-tertiary');
+          btn.style.border = '1px solid var(--color-border)';
+        }
+      }
+    });
+
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('appTableBody');
+    if (!tbody) return;
+
+    // Filter the apps based on the selected status button
+    const filtered = currentApps.filter(app => {
+      const stat = app['Status'] || 'Pending';
+      return stat === currentFilter;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px; text-align: center; color: var(--color-text-muted);">No ${currentFilter.toLowerCase()} applications found.</td></tr>`;
+      return;
+    }
+
+    // Build the table rows
+    const rowsHTML = filtered.map(app => {
+      const name = app['Full Name'] || 'Unknown';
+      const site = app['Current School/Site'] || app['Current Site'] || '--';
+      const topChoice = app['Top Location Choice'] || '--';
+      
+      const assignedSite = app['Assigned Site'] || '';
+      const assignedPos = app['Assigned Position'] || '';
+      const assignedSess = app['Assigned Session'] || '';
+      
+      let assignmentText = '<span style="color:var(--color-text-muted); font-style:italic;">None</span>';
+      if (assignedSite || assignedPos) {
+        assignmentText = `<strong style="color:var(--color-primary);">${assignedSite}</strong><br><span style="font-size:0.8rem; color:var(--color-text-sub);">${assignedPos} (${assignedSess})</span>`;
+      }
+
+      // Pill color for status
+      let statusColor = '#e2e8f0'; let statusText = '#1c2333';
+      if (currentFilter === 'Approved') { statusColor = '#dcfce7'; statusText = '#166534'; }
+      if (currentFilter === 'Denied') { statusColor = '#fee2e2'; statusText = '#991b1b'; }
+
+      return `
+        <tr style="border-bottom: 1px solid var(--color-border);">
+          <td style="padding: 12px 16px; font-weight: 600;">${name}</td>
+          <td style="padding: 12px 16px;">${site}</td>
+          <td style="padding: 12px 16px;">${topChoice}</td>
+          <td style="padding: 12px 16px;">
+            <span style="background:${statusColor}; color:${statusText}; padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:700; text-transform:uppercase;">${currentFilter}</span>
+          </td>
+          <td style="padding: 12px 16px; line-height:1.2;">${assignmentText}</td>
+          <td style="padding: 12px 16px;">
+            <button class="btn btn-secondary btn-sm" onclick="AppReview.openModal(${app.rowIndex})">Review</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    tbody.innerHTML = rowsHTML;
+  }
+
+  function openModal(rowIndex) {
+    const app = currentApps.find(a => a.rowIndex === rowIndex);
+    if (!app) return;
+
+    document.getElementById('reviewModalApplicant').textContent = `Applicant: ${app['Full Name'] || 'Unknown'}`;
+    document.getElementById('reviewStatus').value = app['Status'] || 'Pending';
+    document.getElementById('reviewSite').value = app['Assigned Site'] || '';
+    document.getElementById('reviewPosition').value = app['Assigned Position'] || '';
+    document.getElementById('reviewSession').value = app['Assigned Session'] || '';
+    document.getElementById('reviewRowIndex').value = rowIndex;
+
+    const modal = document.getElementById('reviewActionModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('reviewActionModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function saveDecision() {
+    const btn = document.getElementById('saveReviewBtn');
+    const rowIndex = document.getElementById('reviewRowIndex').value;
+    
+    const decisionData = {
+      status: document.getElementById('reviewStatus').value,
+      site: document.getElementById('reviewSite').value,
+      position: document.getElementById('reviewPosition').value,
+      session: document.getElementById('reviewSession').value
+    };
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
+    google.script.run
+      .withSuccessHandler(res => {
+        if (btn) { btn.disabled = false; btn.textContent = 'Save Decision'; }
+        if (res && res.success) {
+          closeModal();
+          loadApplications(); // Refresh the table automatically
+        } else {
+          alert('Error saving decision: ' + res.error);
+        }
+      })
+      .withFailureHandler(() => {
+        if (btn) { btn.disabled = false; btn.textContent = 'Save Decision'; }
+        alert('Server error occurred while saving.');
+      })
+      .saveReviewDecision(currentSheet, parseInt(rowIndex), decisionData);
+  }
+
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', buildReviewModal);
+
+  return { loadApplications, filterApps, openModal, closeModal, saveDecision };
+
+})();
+</script>
