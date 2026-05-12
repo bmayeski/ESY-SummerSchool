@@ -410,3 +410,66 @@ function _sendConfirmationEmail(toEmail, name, programLabel) {
     name: 'GUHSD Summer Programs'
   });
 }
+
+// ============================================================
+// APPLICATION REVIEW LOGIC
+// ============================================================
+
+// Fetches applications from a specific sheet
+function getApplications(sheetName) {
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  if (!ADMIN_EMAILS.map(a => a.toLowerCase()).includes(email)) return { success: false, error: 'Access denied.' };
+
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(sheetName);
+    if (!sheet) return { success: true, data: [] }; // Return empty if sheet doesn't exist yet
+
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const apps = [];
+
+    // Map rows to objects
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i];
+      let app = { rowIndex: i + 1, sheetName: sheetName }; // Store row index so we know where to save updates
+      for (let j = 0; j < headers.length; j++) {
+        app[headers[j]] = row[j];
+      }
+      // Default empty statuses to 'Pending'
+      if (!app['Status'] || app['Status'] === '') app['Status'] = 'Pending';
+      apps.push(app);
+    }
+    return { success: true, data: apps };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+
+// Saves the Admin's review decisions back to the sheet
+function saveReviewDecision(sheetName, rowIndex, decisionData) {
+  const email = Session.getActiveUser().getEmail().toLowerCase();
+  if (!ADMIN_EMAILS.map(a => a.toLowerCase()).includes(email)) return { success: false, error: 'Access denied.' };
+
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(sheetName);
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+    // Find the column indexes for our admin fields
+    const statusCol = headers.indexOf('Status') + 1;
+    const siteCol = headers.indexOf('Assigned Site') + 1;
+    const posCol = headers.indexOf('Assigned Position') + 1;
+    const sessCol = headers.indexOf('Assigned Session') + 1;
+
+    // Update the sheet
+    if (statusCol > 0) sheet.getRange(rowIndex, statusCol).setValue(decisionData.status);
+    if (siteCol > 0) sheet.getRange(rowIndex, siteCol).setValue(decisionData.site);
+    if (posCol > 0) sheet.getRange(rowIndex, posCol).setValue(decisionData.position);
+    if (sessCol > 0) sheet.getRange(rowIndex, sessCol).setValue(decisionData.session);
+
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
