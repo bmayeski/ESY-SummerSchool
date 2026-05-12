@@ -82,9 +82,10 @@ const AppForms = (() => {
       container._ranked = ranked;
     }
 
-    // Expose add/remove via AppForms so inline onclick works
+    // Expose add/remove/clear via AppForms so inline onclick works
     container._addSite    = (s) => { if (!ranked.includes(s)) { ranked.push(s); render(); } };
     container._removeSite = (s) => { ranked = ranked.filter(x => x !== s); render(); };
+    container._clearSites = () =>  { ranked = []; render(); }; // Added dedicated clear method
 
     render();
   }
@@ -278,8 +279,11 @@ const AppForms = (() => {
     form.querySelectorAll('.field-error-msg').forEach(el => el.classList.remove('visible'));
     form.querySelectorAll('.is-checked').forEach(el => el.classList.remove('is-checked')); // Clear radio states
     form.querySelectorAll('[data-conditional]').forEach(el => el.style.display = 'none');
-    // Re-render location pickers to their empty state
-    form.querySelectorAll('[id$="-location-picker"]').forEach(el => el._ranked && (el._ranked = []) && el._addSite && buildLocationPicker(el.id, el._sites));
+    
+    // Clear location pickers cleanly using the new method
+    form.querySelectorAll('[id$="-location-picker"]').forEach(el => {
+      if (typeof el._clearSites === 'function') el._clearSites();
+    });
   }
 
   // ── CERTIFICATED ESY ──────────────────────────────────────
@@ -329,8 +333,14 @@ const AppForms = (() => {
           if (res && res.success) {
             AppModals.showSuccess('Application Submitted!',
               `Thank you, ${data['Full Name'] || 'applicant'}! Your Certificated ESY application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            
+            // Clear the form
             resetForm('formCertESY');
-            buildLocationPicker('ce-location-picker', SITES_ESY);
+            
+            // Redirect to Home Tab and jump to top of page
+            if (typeof AppNav !== 'undefined') AppNav.switchTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
           } else {
             AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
           }
@@ -390,8 +400,14 @@ const AppForms = (() => {
           if (res && res.success) {
             AppModals.showSuccess('Application Submitted!',
               `Thank you, ${data['Full Name'] || 'applicant'}! Your Certificated Summer School application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            
+            // Clear the form
             resetForm('formCertSS');
-            buildLocationPicker('cs-location-picker', SITES_SS);
+            
+            // Redirect to Home Tab and jump to top of page
+            if (typeof AppNav !== 'undefined') AppNav.switchTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
           } else {
             AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
           }
@@ -431,8 +447,14 @@ const AppForms = (() => {
           if (res && res.success) {
             AppModals.showSuccess('Application Submitted!',
               `Thank you, ${data['Full Name'] || 'applicant'}! Your Classified ESY application has been received. A confirmation email has been sent to ${data['Email'] || 'your email address'}.`);
+            
+            // Clear the form
             resetForm('formClassESY');
-            buildLocationPicker('cl-location-picker', SITES_ESY);
+            
+            // Redirect to Home Tab and jump to top of page
+            if (typeof AppNav !== 'undefined') AppNav.switchTab('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
           } else {
             AppModals.showError('Submission Error', res.error || 'Something went wrong. Please try again or contact HR.');
           }
