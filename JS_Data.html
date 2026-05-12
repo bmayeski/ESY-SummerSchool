@@ -4,30 +4,25 @@ const AppData = (() => {
   const FIELD_MAP = {
     announcementMsg:    'announcementMsg',
     applicationDeadline:'deadlineDate',
-    // Shared schedule
     sharedDates:        'sharedDates',
     sharedDates2:       'sharedDates2',
     sharedSessionI:     'sharedSessionI',
     sharedSessionII:    'sharedSessionII',
-    // ELITE
     eliteSessIDates:    'eliteSessIDates',
     eliteSessIIDates:   'eliteSessIIDates',
     eliteHours:         'eliteHours',
     eliteHours2:        'eliteHours2',
     eliteNoSchool:      'eliteNoSchool',
-    // Helix
     helixDates:         'helixDates',
     helixDates2:        'helixDates2',
     helixSessIHours:    'helixSessIHours',
     helixSessIIHours:   'helixSessIIHours',
     helixNoSchool:      'helixNoSchool',
-    // Steele
     steeleDates:        'steeleDates',
     steeleDates2:       'steeleDates2',
     steeleSessIHours:   'steeleSessIHours',
     steeleSessIIHours:  'steeleSessIIHours',
     steeleNoSchool:     'steeleNoSchool',
-    // Contact
     contactName:        'contactName',
     contactEmail:       'contactEmail',
     contactPhone:       'contactPhone',
@@ -38,7 +33,6 @@ const AppData = (() => {
     const el = document.getElementById(id);
     if (!el) return;
     
-    // Check if value is a date, format it
     if (id === 'deadlineDate' && value !== undefined) {
       const dateObj = new Date(value);
       if (!isNaN(dateObj)) {
@@ -46,15 +40,15 @@ const AppData = (() => {
       }
     }
     
-    // Automatically apply N/A styling if field is blank
+    // Automatically apply formatting if field is blank
     if (value === undefined || value === null || String(value).trim() === '') {
-      el.textContent = 'N/A';
+      el.innerHTML = 'N/A';
+      el.style.fontWeight = '500';
       el.style.color = 'var(--color-text-muted)';
       el.style.fontStyle = 'italic';
-      el.style.fontWeight = '500';
     } else {
-      el.textContent = value;
-      el.style.color = ''; // Reset CSS
+      el.innerHTML = value; 
+      el.style.color = ''; 
       el.style.fontStyle = ''; 
       el.style.fontWeight = '';
     }
