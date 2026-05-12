@@ -1,135 +1,111 @@
 <script>
-/* ============================================================
-   JS_Admin.html — Admin panel: auth verification, field
-   population, and saving changes back to the spreadsheet
-============================================================ */
-
 const AppAdmin = (() => {
 
-  // Maps spreadsheet keys → admin field input IDs
   const ADMIN_FIELDS = {
     announcementMsg:    'admin-announcementMsg',
     applicationDeadline:'admin-applicationDeadline',
-    // Shared schedule
     sharedDates:        'admin-sharedDates',
     sharedDates2:       'admin-sharedDates2',
     sharedSessionI:     'admin-sharedSessionI',
     sharedSessionII:    'admin-sharedSessionII',
-    // ELITE
     eliteSessIDates:    'admin-eliteSessIDates',
     eliteSessIIDates:   'admin-eliteSessIIDates',
     eliteHours:         'admin-eliteHours',
     eliteHours2:        'admin-eliteHours2',
     eliteNoSchool:      'admin-eliteNoSchool',
-    // Helix
     helixDates:         'admin-helixDates',
     helixDates2:        'admin-helixDates2',
     helixSessIHours:    'admin-helixSessIHours',
     helixSessIIHours:   'admin-helixSessIIHours',
     helixNoSchool:      'admin-helixNoSchool',
-    // Steele
     steeleDates:        'admin-steeleDates',
     steeleDates2:       'admin-steeleDates2',
     steeleSessIHours:   'admin-steeleSessIHours',
     steeleSessIIHours:  'admin-steeleSessIIHours',
     steeleNoSchool:     'admin-steeleNoSchool',
-    // Contact
     contactName:        'admin-contactName',
     contactEmail:       'admin-contactEmail',
     contactPhone:       'admin-contactPhone',
     additionalInfo:     'admin-additionalInfo'
   };
 
-  function setStatus(msg, type) {
+  function setStatus(msg, isError = false) {
     const el = document.getElementById('adminSaveStatus');
     if (!el) return;
     el.textContent = msg;
-    el.className = 'admin-save-status ' + (type || '');
+    el.style.color = isError ? '#e53e3e' : '#38a169';
+    setTimeout(() => el.textContent = '', 4000);
   }
 
-  function populateFields(data) {
-    for (const [key, fieldId] of Object.entries(ADMIN_FIELDS)) {
-      const el = document.getElementById(fieldId);
-      if (el && data[key] !== undefined) el.value = data[key];
-    }
-  }
+  function loadData() {
+    const panel = document.getElementById('adminPanelContent');
+    const denied = document.getElementById('adminDenied');
 
-  function collectFields() {
-    const updates = {};
-    for (const [key, fieldId] of Object.entries(ADMIN_FIELDS)) {
-      const el = document.getElementById(fieldId);
-      if (el) updates[key] = el.value.trim();
-    }
-    return updates;
+    google.script.run
+      .withSuccessHandler(result => {
+        if (result && result.success) {
+          if (panel) panel.style.display = 'grid'; 
+          if (denied) denied.style.display = 'none';
+
+          for (const [key, elId] of Object.entries(ADMIN_FIELDS)) {
+            const el = document.getElementById(elId);
+            if (el && result.data[key] !== undefined) {
+              el.value = result.data[key];
+            }
+          }
+        } else {
+          if (panel) panel.style.display = 'none';
+          if (denied) denied.style.display = 'block';
+        }
+      })
+      .withFailureHandler(() => {
+         if (panel) panel.style.display = 'none';
+         if (denied) denied.style.display = 'block';
+      })
+      .getAdminInfo();
   }
 
   function save() {
-    const saveBtn = document.getElementById('adminSaveBtn');
-    if (saveBtn) saveBtn.disabled = true;
-    setStatus('Saving…', 'saving');
+    const btn = document.getElementById('adminSaveBtn');
+    if (btn) { btn.disabled = true; btn.innerHTML = 'Saving...'; }
+    setStatus('Saving...');
 
-    const updates = collectFields();
+    const updates = {};
+    for (const [key, elId] of Object.entries(ADMIN_FIELDS)) {
+      const el = document.getElementById(elId);
+      if (el) updates[key] = el.value.trim();
+    }
 
     google.script.run
       .withSuccessHandler(res => {
-        if (saveBtn) saveBtn.disabled = false;
+        if (btn) {
+           btn.disabled = false;
+           btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293z"/></svg> Save Changes`;
+        }
         if (res && res.success) {
-          setStatus('✓ Changes saved successfully!', 'saved');
-          // Also refresh the home tab live data
-          AppData.init();
-          setTimeout(() => setStatus('', ''), 4000);
+          setStatus('Changes saved successfully!');
+          if (typeof AppData !== 'undefined' && AppData.init) AppData.init();
         } else {
-          setStatus('Error: ' + (res.error || 'Unknown error.'), 'error');
+          setStatus(res.error || 'Failed to save.', true);
         }
       })
-      .withFailureHandler(err => {
-        if (saveBtn) saveBtn.disabled = false;
-        setStatus('Server error. Please try again.', 'error');
-        console.error(err);
+      .withFailureHandler(() => {
+        if (btn) {
+           btn.disabled = false;
+           btn.innerHTML = `Save Changes`;
+        }
+        setStatus('Server error occurred.', true);
       })
       .saveAdminInfo(updates);
   }
 
-  function init() {
-    // Only run if the admin panel exists in the DOM
-    const panel = document.getElementById('tab-admin');
-    if (!panel) return;
-
-    // Verify access server-side
-    google.script.run
-      .withSuccessHandler(res => {
-        if (res && res.isAdmin) {
-          // Load current values into fields
-          google.script.run
-            .withSuccessHandler(infoRes => {
-              if (infoRes && infoRes.success) populateFields(infoRes.data);
-            })
-            .withFailureHandler(() => {})
-            .getAdminInfo();
-        } else {
-          // Show access denied state
-          const content = document.getElementById('adminPanelContent');
-          const denied  = document.getElementById('adminDenied');
-          if (content) content.style.display = 'none';
-          if (denied)  denied.style.display  = 'flex';
-        }
-      })
-      .withFailureHandler(() => {
-        const content = document.getElementById('adminPanelContent');
-        const denied  = document.getElementById('adminDenied');
-        if (content) content.style.display = 'none';
-        if (denied)  denied.style.display  = 'flex';
-      })
-      .checkAdminAccess();
-  }
-
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', loadData);
   } else {
-    init();
+    loadData();
   }
 
-  return { save };
+  return { save, loadData };
 
 })();
 </script>
